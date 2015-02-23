@@ -1,6 +1,6 @@
 package fr.ribesg.pure.file;
 
-import fr.ribesg.bukkit.pure.file.FileUtils;
+import fr.ribesg.bukkit.pure.file.HashUtils;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -23,7 +23,7 @@ public class FileUtilsTest {
         try {
             final Path file = Files.createTempFile("testHash", null);
             Files.write(file, input.getBytes());
-            Assert.assertEquals("Hash is incorrect", output, FileUtils.hashSha256(file));
+            Assert.assertEquals("Hash is incorrect", output, HashUtils.hashSha256(file));
             Files.delete(file);
         } catch (IOException e) {
             Assert.fail("Failed to create temporary file");

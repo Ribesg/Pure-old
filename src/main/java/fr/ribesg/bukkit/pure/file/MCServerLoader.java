@@ -22,17 +22,17 @@ public final class MCServerLoader {
      */
 
     public static void load(final MCServerVersion version) throws IOException {
-        LOGGER.entering(MCServerLoader.class.getName(), "load");
+        MCServerLoader.LOGGER.entering(MCServerLoader.class.getName(), "load");
 
         final String folder = Pure.getFolder().getAbsolutePath();
         final String[] split = version.getUrl().toString().split("/");
         final String inputJarName = split[split.length - 1];
-        final Path inputJarPath = Paths.get(folder, inputJarName);
+        final Path inputJarPath = Paths.get(folder, "jars", inputJarName);
         if (!Files.exists(inputJarPath)) {
-            FileUtils.download(Paths.get(folder), version.getUrl(), inputJarName);
+            FileUtils.download(Paths.get(folder, "jars"), version.getUrl(), inputJarName);
         }
-        FileUtils.relocateJarContent(inputJarPath, Paths.get(folder, inputJarName + ".remapped"), "**", version.name().toLowerCase() + ".@1");
+        FileUtils.relocateJarContent(inputJarPath, Paths.get(folder, "jars", inputJarName + ".remapped"), "**", version.name().toLowerCase() + ".@1");
 
-        LOGGER.exiting(MCServerLoader.class.getName(), "load");
+        MCServerLoader.LOGGER.exiting(MCServerLoader.class.getName(), "load");
     }
 }
