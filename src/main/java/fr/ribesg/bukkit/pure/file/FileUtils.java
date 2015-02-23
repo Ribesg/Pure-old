@@ -30,7 +30,7 @@ public final class FileUtils {
      * @return the path to the downloaded file
      */
     public static Path download(final Path destinationFolder, final URL sourceUrl, final String wantedFileName) throws IOException {
-        FileUtils.LOGGER.entering(FileUtils.class.getName(), "download");
+        LOGGER.entering(FileUtils.class.getName(), "download");
 
         if ((!Files.exists(destinationFolder) || !Files.isDirectory(destinationFolder)) && !destinationFolder.toFile().mkdirs()) {
             throw new IOException("Folder " + destinationFolder.toString() + " doesn't exist and cannot be created");
@@ -41,12 +41,12 @@ public final class FileUtils {
             final ReadableByteChannel source = Channels.newChannel(is);
             final FileOutputStream out = new FileOutputStream(finalFile)
         ) {
-            FileUtils.LOGGER.fine("Downloading " + sourceUrl + "...");
+            LOGGER.fine("Downloading " + sourceUrl + "...");
             out.getChannel().transferFrom(source, 0, Long.MAX_VALUE);
-            FileUtils.LOGGER.fine("Done!");
+            LOGGER.fine("Done!");
         }
 
-        FileUtils.LOGGER.exiting(FileUtils.class.getName(), "download");
+        LOGGER.exiting(FileUtils.class.getName(), "download");
 
         return finalFile.toPath();
     }
@@ -61,7 +61,7 @@ public final class FileUtils {
      * @throws IOException if anything goes wrong
      */
     public static void relocateJarContent(final Path inputJar, final Path outputJar, final String pattern, final String result) throws IOException {
-        FileUtils.LOGGER.entering(FileUtils.class.getName(), "relocateJarContent");
+        LOGGER.entering(FileUtils.class.getName(), "relocateJarContent");
 
         final String rulesFilePath = inputJar.toAbsolutePath().toString() + ".tmp";
 
@@ -83,21 +83,21 @@ public final class FileUtils {
 
         // Execute JarJar
         try {
-            FileUtils.LOGGER.fine("Executing JarJar...");
+            LOGGER.fine("Executing JarJar...");
             Main.main(new String[] {
                 "process",
                 rulesFilePath,
                 inputJar.toString(),
                 outputJar.toString()
             });
-            FileUtils.LOGGER.fine("Done!");
+            LOGGER.fine("Done!");
 
-            FileUtils.LOGGER.exiting(FileUtils.class.getName(), "relocateJarContent");
+            LOGGER.exiting(FileUtils.class.getName(), "relocateJarContent");
         } catch (final Exception e) {
             throw new IOException("Failed to execute JarJar", e);
         } finally {
             if (!rulesFile.delete()) {
-                FileUtils.LOGGER.warning("Failed to remove rules file after execution");
+                LOGGER.warning("Failed to remove rules file after execution");
             }
         }
     }

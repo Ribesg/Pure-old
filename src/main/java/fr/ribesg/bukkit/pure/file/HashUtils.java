@@ -34,7 +34,7 @@ public final class HashUtils {
      * @param filePath a file
      */
     public static String hashSha256(final Path filePath) throws IOException {
-        HashUtils.LOGGER.entering(FileUtils.class.getName(), "hashSha256");
+        LOGGER.entering(FileUtils.class.getName(), "hashSha256");
 
         try (
             final RandomAccessFile file = new RandomAccessFile(filePath.toFile(), "r")
@@ -51,7 +51,7 @@ public final class HashUtils {
                 lastIndex += readSize;
             }
 
-            HashUtils.LOGGER.exiting(FileUtils.class.getName(), "hashSha256");
+            LOGGER.exiting(FileUtils.class.getName(), "hashSha256");
 
             return HashUtils.bytesToHex(digest.digest());
         } catch (final NoSuchAlgorithmException e) {
@@ -68,7 +68,7 @@ public final class HashUtils {
     private static String bytesToHex(final byte[] bytes) {
         final char[] result = new char[bytes.length * 2];
         for (int j = 0; j < bytes.length; j++) {
-            int v = bytes[j] & 0xFF;
+            final int v = bytes[j] & 0xFF;
             result[j * 2] = HashUtils.HEXADECIMAL_CHARACTERS[v >>> 4];
             result[j * 2 + 1] = HashUtils.HEXADECIMAL_CHARACTERS[v & 0x0F];
         }
