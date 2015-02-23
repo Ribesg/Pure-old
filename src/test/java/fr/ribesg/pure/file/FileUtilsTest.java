@@ -25,7 +25,7 @@ public class FileUtilsTest {
             Files.write(file, input.getBytes());
             Assert.assertEquals("Hash is incorrect", output, HashUtils.hashSha256(file));
             Files.delete(file);
-        } catch (IOException e) {
+        } catch (final IOException e) {
             Assert.fail("Failed to create temporary file");
         }
     }

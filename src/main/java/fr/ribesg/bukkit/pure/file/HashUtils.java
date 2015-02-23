@@ -63,6 +63,7 @@ public final class HashUtils {
      * Converts a byte array to an hexadecimal representation of it.
      *
      * @param bytes a byte array
+     *
      * @return a String representing the byte array
      */
     private static String bytesToHex(final byte[] bytes) {

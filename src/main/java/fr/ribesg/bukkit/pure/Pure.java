@@ -1,6 +1,6 @@
 package fr.ribesg.bukkit.pure;
 
-import fr.ribesg.bukkit.pure.file.MCServerLoader;
+import fr.ribesg.bukkit.pure.file.MCServerHandler;
 import fr.ribesg.bukkit.pure.file.MCServerVersion;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -20,7 +20,7 @@ public final class Pure extends JavaPlugin {
     public static void main(final String[] args) throws IOException {
         Pure.getPluginLogger().setLevel(Level.ALL);
         Pure.getPluginLogger().addHandler(new ConsoleHandler());
-        MCServerLoader.load(MCServerVersion.RELEASE_1_7_10);
+        MCServerHandler.require(MCServerVersion.RELEASE_1_7_10);
     }
 
     /**
