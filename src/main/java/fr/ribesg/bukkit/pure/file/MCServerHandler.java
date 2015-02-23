@@ -82,7 +82,7 @@ public final class MCServerHandler {
 
             // Download the Vanilla jar file if it doesn't exist
             if (!Files.exists(jarPath)) {
-                FileUtils.download(jarContainerPath, version.getUrl(), inputJarName);
+                FileUtils.download(jarContainerPath, version.getUrl(), inputJarName, version.getHash());
             }
 
             // Relocate the jar classes packages and put that into our remapped jar file
