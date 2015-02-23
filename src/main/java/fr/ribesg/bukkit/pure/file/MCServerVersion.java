@@ -1,4 +1,5 @@
 package fr.ribesg.bukkit.pure.file;
+
 import java.net.MalformedURLException;
 import java.net.URL;
 
@@ -12,13 +13,19 @@ public enum MCServerVersion {
     /**
      * Minecraft 1.8 released 2014-09-02.
      */
-    RELEASE_1_8("40E23F3823D6F0E3CBADC491CEDB55B8BA53F8AB516B68182DDD1536BABEB291", "http://s3.amazonaws.com/Minecraft.Download/versions/1.8/minecraft_server.1.8.jar"),
+    RELEASE_1_8(
+        "40E23F3823D6F0E3CBADC491CEDB55B8BA53F8AB516B68182DDD1536BABEB291",
+        "http://s3.amazonaws.com/Minecraft.Download/versions/1.8/minecraft_server.1.8.jar"
+    ),
 
     /**
      * Minecraft 1.7.10 released 2014-06-26.
      */
-    RELEASE_1_7_10("C70870F00C4024D829E154F7E5f4E885B02DD87991726A3308D81f513972f3FC", "http://s3.amazonaws.com/Minecraft.Download/versions/1.7.10/minecraft_server.1.7.10.jar"),
-    
+    RELEASE_1_7_10(
+        "C70870F00C4024D829E154F7E5f4E885B02DD87991726A3308D81f513972f3FC",
+        "http://s3.amazonaws.com/Minecraft.Download/versions/1.7.10/minecraft_server.1.7.10.jar"
+    ),
+
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */;
 
     /**

@@ -1,4 +1,5 @@
 package fr.ribesg.pure.file;
+
 import fr.ribesg.bukkit.pure.file.FileUtils;
 import org.junit.Assert;
 import org.junit.Test;

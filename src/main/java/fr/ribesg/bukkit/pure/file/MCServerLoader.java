@@ -1,4 +1,5 @@
 package fr.ribesg.bukkit.pure.file;
+
 import fr.ribesg.bukkit.pure.Pure;
 
 import java.io.IOException;
@@ -14,24 +15,24 @@ import java.util.logging.Logger;
  */
 public final class MCServerLoader {
 
-	private static final Logger LOGGER = Pure.getPluginLogger();
+    private static final Logger LOGGER = Pure.getPluginLogger();
 
     /*
      * TODO: Everything! This should use Jar Jar Links things and then some Classloader things
      */
 
-	public static void load(final MCServerVersion version) throws IOException {
-		LOGGER.entering(MCServerLoader.class.getName(), "load");
+    public static void load(final MCServerVersion version) throws IOException {
+        LOGGER.entering(MCServerLoader.class.getName(), "load");
 
-		final String folder = Pure.getFolder().getAbsolutePath();
-		final String[] split = version.getUrl().toString().split("/");
-		final String inputJarName = split[split.length - 1];
-		final Path inputJarPath = Paths.get(folder, inputJarName);
-		if (!Files.exists(inputJarPath)) {
-			FileUtils.download(Paths.get(folder), version.getUrl(), inputJarName);
-		}
-		FileUtils.relocateJarContent(inputJarPath, Paths.get(folder, inputJarName + ".remapped"), "**", version.name().toLowerCase() + ".@1");
+        final String folder = Pure.getFolder().getAbsolutePath();
+        final String[] split = version.getUrl().toString().split("/");
+        final String inputJarName = split[split.length - 1];
+        final Path inputJarPath = Paths.get(folder, inputJarName);
+        if (!Files.exists(inputJarPath)) {
+            FileUtils.download(Paths.get(folder), version.getUrl(), inputJarName);
+        }
+        FileUtils.relocateJarContent(inputJarPath, Paths.get(folder, inputJarName + ".remapped"), "**", version.name().toLowerCase() + ".@1");
 
-		LOGGER.exiting(MCServerLoader.class.getName(), "load");
-	}
+        LOGGER.exiting(MCServerLoader.class.getName(), "load");
+    }
 }
