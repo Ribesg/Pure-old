@@ -1,4 +1,4 @@
-package fr.ribesg.bukkit.pure.file;
+package fr.ribesg.bukkit.pure.util;
 
 import fr.ribesg.bukkit.pure.Pure;
 

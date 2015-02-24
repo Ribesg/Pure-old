@@ -1,6 +1,6 @@
-package fr.ribesg.bukkit.pure.file;
+package fr.ribesg.bukkit.pure;
 
-import fr.ribesg.bukkit.pure.Pure;
+import fr.ribesg.bukkit.pure.util.FileUtils;
 
 import java.io.IOException;
 import java.net.URL;
@@ -17,14 +17,14 @@ import java.util.logging.Logger;
  *
  * @author Ribesg
  */
-public final class MCServerHandler {
+public final class MCJarHandler {
 
     private static final Logger LOGGER = Pure.getPluginLogger();
 
     /**
      * Contains existing {@link ClassLoader}s for loaded Minecraft Versions.
      */
-    private static final Map<MCServerVersion, ClassLoader> CLASSLOADERS = new EnumMap<>(MCServerVersion.class);
+    private static final Map<MCVersion, ClassLoader> CLASSLOADERS = new EnumMap<>(MCVersion.class);
 
     /**
      * Gets a ClassLoader matching the provided Minecraft Version.
@@ -35,16 +35,16 @@ public final class MCServerHandler {
      *
      * @throws IOException if anything wrong occurs
      */
-    public static ClassLoader getClassLoader(final MCServerVersion version) throws IOException {
-        LOGGER.entering(MCServerHandler.class.getName(), "getClassLoader");
+    public static ClassLoader getClassLoader(final MCVersion version) throws IOException {
+        LOGGER.entering(MCJarHandler.class.getName(), "getClassLoader");
 
-        ClassLoader result = MCServerHandler.CLASSLOADERS.get(version);
+        ClassLoader result = MCJarHandler.CLASSLOADERS.get(version);
         if (result == null) {
-            MCServerHandler.require(version);
-            result = MCServerHandler.CLASSLOADERS.get(version);
+            MCJarHandler.require(version);
+            result = MCJarHandler.CLASSLOADERS.get(version);
         }
 
-        LOGGER.exiting(MCServerHandler.class.getName(), "getClassLoader");
+        LOGGER.exiting(MCJarHandler.class.getName(), "getClassLoader");
         return result;
     }
 
@@ -62,10 +62,10 @@ public final class MCServerHandler {
      *
      * @throws IOException if anything goes wrong
      */
-    public static void require(final MCServerVersion version) throws IOException {
-        LOGGER.entering(MCServerHandler.class.getName(), "require");
+    public static void require(final MCVersion version) throws IOException {
+        LOGGER.entering(MCJarHandler.class.getName(), "require");
 
-        if (MCServerHandler.CLASSLOADERS.get(version) == null) {
+        if (MCJarHandler.CLASSLOADERS.get(version) == null) {
             // Find (and eventually create) our plugin's folder subfolder containing jar files (plugin/Pure/jars)
             final Path jarContainerPath = Paths.get(Pure.getFolder().getAbsolutePath(), "jars");
             if (!Files.isDirectory(jarContainerPath)) {
@@ -91,9 +91,9 @@ public final class MCServerHandler {
             // Load the remapped jar using our current classloader
             final URL[] urls = {new URL("jar:file:" + remappedJarPath.toString() + "!/")};
             final ClassLoader jarClassLoader = URLClassLoader.newInstance(urls);
-            MCServerHandler.CLASSLOADERS.put(version, jarClassLoader);
+            MCJarHandler.CLASSLOADERS.put(version, jarClassLoader);
         }
 
-        LOGGER.exiting(MCServerHandler.class.getName(), "require");
+        LOGGER.exiting(MCJarHandler.class.getName(), "require");
     }
 }

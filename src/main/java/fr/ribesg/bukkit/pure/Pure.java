@@ -1,7 +1,5 @@
 package fr.ribesg.bukkit.pure;
 
-import fr.ribesg.bukkit.pure.file.MCServerHandler;
-import fr.ribesg.bukkit.pure.file.MCServerVersion;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
@@ -17,10 +15,14 @@ import java.util.logging.Logger;
  */
 public final class Pure extends JavaPlugin {
 
+    private static final Level LOG_LEVEL = Level.ALL;
+
     public static void main(final String[] args) throws IOException {
-        Pure.getPluginLogger().setLevel(Level.ALL);
-        Pure.getPluginLogger().addHandler(new ConsoleHandler());
-        MCServerHandler.require(MCServerVersion.RELEASE_1_7_10);
+        Pure.getPluginLogger().setLevel(Pure.LOG_LEVEL);
+        final ConsoleHandler handler = new ConsoleHandler();
+        handler.setLevel(Pure.LOG_LEVEL);
+        Pure.getPluginLogger().addHandler(handler);
+        MCJarHandler.require(MCVersion.RELEASE_1_7_10);
     }
 
     /**
@@ -30,7 +32,7 @@ public final class Pure extends JavaPlugin {
      */
     public static Logger getPluginLogger() {
         if (Pure.instance == null) {
-            return Logger.getGlobal();
+            return Logger.getLogger("Pure");
         }
         return Pure.instance.getLogger();
     }

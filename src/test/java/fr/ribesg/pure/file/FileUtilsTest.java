@@ -1,6 +1,6 @@
 package fr.ribesg.pure.file;
 
-import fr.ribesg.bukkit.pure.file.HashUtils;
+import fr.ribesg.bukkit.pure.util.HashUtils;
 import org.junit.Assert;
 import org.junit.Test;
 
