@@ -43,13 +43,11 @@ public final class ReflectionUtils {
      * @param obj       the object
      * @param fieldName the name of the field
      * @param value     the new value of the field
-     * @param <T>       the type of the object
-     * @param <U>       the type of the field
      *
      * @throws NoSuchFieldException   if the field doesn't exist in the class
      * @throws IllegalAccessException if security issues prevent this call
      */
-    public static <T, U> void set(final Class<T> clazz, final T obj, final String fieldName, final U value) throws NoSuchFieldException, IllegalAccessException {
+    public static void set(final Class<?> clazz, final Object obj, final String fieldName, final Object value) throws NoSuchFieldException, IllegalAccessException {
         final Field field = clazz.getDeclaredField(fieldName);
         field.setAccessible(true);
 
@@ -71,15 +69,14 @@ public final class ReflectionUtils {
      * @param obj        the object
      * @param fieldName  the name of the field
      * @param fieldClass the class of the field
-     * @param <T>        the type of the object
-     * @param <U>        the type of the field
+     * @param <T>        the type of the field
      *
      * @return the field's value
      *
      * @throws NoSuchFieldException   if the field doesn't exist in the class
      * @throws IllegalAccessException if security issues prevent this call
      */
-    public static <T, U> U get(final Class<T> clazz, final T obj, final String fieldName, final Class<U> fieldClass) throws NoSuchFieldException, IllegalAccessException {
+    public static <T> T get(final Class<?> clazz, final Object obj, final String fieldName, final Class<T> fieldClass) throws NoSuchFieldException, IllegalAccessException {
         final Field field = clazz.getDeclaredField(fieldName);
         field.setAccessible(true);
         return fieldClass.cast(field.get(obj));

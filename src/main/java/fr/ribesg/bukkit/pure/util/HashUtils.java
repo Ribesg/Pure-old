@@ -13,6 +13,7 @@ import java.util.logging.Logger;
  * Used to hash things.
  *
  * @author Ribesg
+ * @author coelho
  */
 public final class HashUtils {
 
@@ -74,5 +75,17 @@ public final class HashUtils {
             result[j * 2 + 1] = HashUtils.HEXADECIMAL_CHARACTERS[v & 0x0F];
         }
         return new String(result);
+    }
+
+    /**
+     * Builds a long hash from two integers.
+     *
+     * @param a an int
+     * @param b another int
+     *
+     * @return a hash built from the two provided integers
+     */
+    public static long toLong(final int a, final int b) {
+        return ((long) a << 32) + b - Integer.MAX_VALUE;
     }
 }

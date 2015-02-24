@@ -30,20 +30,20 @@ public abstract class AbstractProxyChunkGenerator extends ChunkGenerator {
 
     @Override
     public short[][] generateExtBlockSections(final World world, final Random random, final int x, final int z, final ChunkGenerator.BiomeGrid biomes) {
-        if (!this.nmsInitialized && !this.initializeNms()) {
+        if (!this.nmsInitialized && !this.initializeNms(world)) {
             return null;
         }
 
         return this.generateChunk(world, random, x, z, biomes);
     }
 
-    protected abstract boolean initializeNms();
+    protected abstract boolean initializeNms(final World world);
 
     protected abstract short[][] generateChunk(final World world, final Random random, final int x, final int z, final ChunkGenerator.BiomeGrid biomes);
 
     @Override
     public List<BlockPopulator> getDefaultPopulators(final World world) {
-        if (!this.nmsInitialized && !this.initializeNms()) {
+        if (!this.nmsInitialized && !this.initializeNms(world)) {
             return null;
         }
         return Arrays.asList(this.blockPopulator);
