@@ -86,7 +86,7 @@ public final class MCJarHandler {
             }
 
             // Relocate the jar classes packages and put that into our remapped jar file
-            FileUtils.relocateJarContent(jarPath, remappedJarPath, "**", version.name().toLowerCase() + ".@1");
+            FileUtils.relocateJarContent(jarPath, remappedJarPath, version.name().toLowerCase());
 
             // Load the remapped jar using our current classloader
             final URL[] urls = {new URL("jar:file:" + remappedJarPath.toString() + "!/")};

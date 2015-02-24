@@ -10,7 +10,10 @@ import java.nio.channels.ReadableByteChannel;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Enumeration;
 import java.util.logging.Logger;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipFile;
 
 /**
  * Used to download things.
@@ -56,7 +59,7 @@ public final class FileUtils {
                     break;
                 } else {
                     LOGGER.warning("The downloaded file is incorrect!");
-                    throw new IOException("Download file hash doesn't match awaited hash");
+                    throw new IOException("Download file hash doesn't match awaited hash\nAwaited: " + wantedHash + "\nReceived: " + hash);
                 }
             } catch (final IOException e) {
                 LOGGER.warning("Attempt n°" + attempt + " failed!");
@@ -79,12 +82,11 @@ public final class FileUtils {
      *
      * @param inputJar  input jar file
      * @param outputJar output jar file
-     * @param pattern   source package in input jar file
-     * @param result    destination package in output jar file
+     * @param prefix    prefix for all packages
      *
      * @throws IOException if anything goes wrong
      */
-    public static void relocateJarContent(final Path inputJar, final Path outputJar, final String pattern, final String result) throws IOException {
+    public static void relocateJarContent(final Path inputJar, final Path outputJar, final String prefix) throws IOException {
         LOGGER.entering(FileUtils.class.getName(), "relocateJarContent");
 
         final String rulesFilePath = inputJar.toAbsolutePath().toString() + ".tmp";
@@ -100,9 +102,25 @@ public final class FileUtils {
             throw new IOException("Failed to create rules file " + rulesFilePath);
         }
 
-        // Write rule
-        try (final BufferedWriter writer = Files.newBufferedWriter(rulesFile.toPath())) {
-            writer.write("rule " + pattern + " " + result);
+        // Generate and write rules
+        try (
+            final ZipFile zipFile = new ZipFile(inputJar.toFile());
+            final BufferedWriter writer = Files.newBufferedWriter(rulesFile.toPath())
+        ) {
+            final Enumeration<? extends ZipEntry> enumeration = zipFile.entries();
+            ZipEntry entry;
+            String entryName;
+            while (enumeration.hasMoreElements()) {
+                entry = enumeration.nextElement();
+                entryName = entry.getName();
+                if (!entryName.contains("META-INF")) {
+                    if (entry.isDirectory()) {
+                        writer.write("rule " + entryName.replace('/', '.') + "* " + prefix + ".@0\n");
+                    } else if (!entryName.contains("/") && entryName.endsWith(".class")) {
+                        writer.write("rule " + entryName.replace(".class", "") + ' ' + prefix + ".@0\n");
+                    }
+                }
+            }
         }
 
         // Execute JarJar

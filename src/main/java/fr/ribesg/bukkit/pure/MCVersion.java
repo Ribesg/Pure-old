@@ -22,7 +22,7 @@ public enum MCVersion {
      * Minecraft 1.7.10 released 2014-06-26.
      */
     RELEASE_1_7_10(
-        "C70870F00C4024D829E154F7E5f4E885B02DD87991726A3308D81f513972f3FC",
+        "C70870F00C4024D829E154F7E5F4E885B02DD87991726A3308D81F513972F3FC",
         "http://s3.amazonaws.com/Minecraft.Download/versions/1.7.10/minecraft_server.1.7.10.jar"
     ),
 

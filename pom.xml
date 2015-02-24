@@ -68,6 +68,17 @@
          <artifactId>jarjar</artifactId>
          <version>1.4</version>
       </dependency>
+
+	   <dependency>
+		   <groupId>net.minecraft.server</groupId>
+		   <artifactId>remapped_minecraft_server</artifactId>
+		   <version>1.7.10</version>
+	   </dependency>
+	   <dependency>
+		   <groupId>net.minecraft.server</groupId>
+		   <artifactId>remapped_minecraft_server</artifactId>
+		   <version>1.8</version>
+	   </dependency>
    </dependencies>
 
    <build>

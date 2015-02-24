@@ -4,9 +4,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.logging.ConsoleHandler;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.util.logging.*;
 
 /**
  * This is Pure.
@@ -15,12 +13,18 @@ import java.util.logging.Logger;
  */
 public final class Pure extends JavaPlugin {
 
-    private static final Level LOG_LEVEL = Level.ALL;
+    private static final Level LOG_LEVEL = Level.FINE;
 
     public static void main(final String[] args) throws IOException {
         Pure.getPluginLogger().setLevel(Pure.LOG_LEVEL);
         final ConsoleHandler handler = new ConsoleHandler();
         handler.setLevel(Pure.LOG_LEVEL);
+        handler.setFormatter(new Formatter() {
+            @Override
+            public String format(final LogRecord record) {
+                return this.formatMessage(record) + '\n';
+            }
+        });
         Pure.getPluginLogger().addHandler(handler);
         MCJarHandler.require(MCVersion.RELEASE_1_7_10);
     }
