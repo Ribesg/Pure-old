@@ -15,6 +15,9 @@ public final class Pure extends JavaPlugin {
 
     private static final Level LOG_LEVEL = Level.FINE;
 
+    /**
+     * Download and remap all known MC version.
+     */
     public static void main(final String[] args) throws IOException {
         Pure.getPluginLogger().setLevel(Pure.LOG_LEVEL);
         final ConsoleHandler handler = new ConsoleHandler();
@@ -26,7 +29,10 @@ public final class Pure extends JavaPlugin {
             }
         });
         Pure.getPluginLogger().addHandler(handler);
-        MCJarHandler.require(MCVersion.RELEASE_1_7_10);
+
+        for (final MCVersion v : MCVersion.values()) {
+            MCJarHandler.require(v);
+        }
     }
 
     /**

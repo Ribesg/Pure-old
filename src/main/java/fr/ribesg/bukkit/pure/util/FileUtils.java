@@ -113,14 +113,12 @@ public final class FileUtils {
             while (enumeration.hasMoreElements()) {
                 entry = enumeration.nextElement();
                 entryName = entry.getName();
-                if (!entryName.contains("META-INF")) {
-                    if (entry.isDirectory()) {
-                        writer.write("rule " + entryName.replace('/', '.') + "* " + prefix + ".@0\n");
-                    } else if (!entryName.contains("/") && entryName.endsWith(".class")) {
-                        writer.write("rule " + entryName.replace(".class", "") + ' ' + prefix + ".@0\n");
-                    }
+                if (!entryName.contains("META-INF") && !entry.isDirectory() &&
+                    !entryName.contains("/") && entryName.endsWith(".class")) {
+                    writer.write("rule " + entryName.replace(".class", "") + " net.minecraft.server." + prefix + ".@0\n");
                 }
             }
+            writer.write("rule **.* @1." + prefix + ".@2\n");
         }
 
         // Execute JarJar
