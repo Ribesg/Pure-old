@@ -5,7 +5,7 @@
    <modelVersion>4.0.0</modelVersion>
 
    <name>Pure</name>
-   <url>http://git.ribesg.fr/projects/PURE</url>
+   <url>https://github.com/Ribesg/Pure</url>
    <description>Minecraft Server jar-based Vanilla Generator</description>
 
    <groupId>fr.ribesg.bukkit</groupId>
@@ -27,7 +27,7 @@
       <developer>
          <id>ribesg</id>
          <name>Ribesg</name>
-         <email>ribesg@yahoo.fr</email>
+         <email>ribesg@gmail.com</email>
          <url>http://www.ribesg.fr/</url>
          <roles>
             <role>Main contributor</role>
@@ -48,6 +48,11 @@
    </repositories>
 
    <dependencies>
+      <dependency>
+         <groupId>org.apache.commons</groupId>
+         <artifactId>commons-lang3</artifactId>
+         <version>3.3.2</version>
+      </dependency>
       <dependency>
          <groupId>org.bukkit</groupId>
          <artifactId>bukkit</artifactId>
@@ -160,7 +165,8 @@
                         <includes>
                            <include>**</include>
                         </includes>
-                        <outputDirectory>${project.build.directory}/${project.build.finalName}.jar/sources</outputDirectory>
+                        <outputDirectory>${project.build.directory}/${project.build.finalName}.jar/sources
+                        </outputDirectory>
                      </fileset>
                   </configuration>
                </execution>

@@ -58,9 +58,9 @@ public final class MCServerHandler {
      * The method will then initialize and save a {@link ClassLoader} for this
      * jar file for easy access with the {@link #getClassLoader} method.
      *
-     * @param version
+     * @param version the required version
      *
-     * @throws IOException
+     * @throws IOException if anything goes wrong
      */
     public static void require(final MCServerVersion version) throws IOException {
         LOGGER.entering(MCServerHandler.class.getName(), "require");
