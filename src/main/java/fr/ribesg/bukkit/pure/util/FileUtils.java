@@ -118,7 +118,7 @@ public final class FileUtils {
                     writer.write("rule " + entryName.replace(".class", "") + " net.minecraft.server." + prefix + ".@0\n");
                 }
             }
-            writer.write("rule **.* @1." + prefix + ".@2\n");
+            writer.write("rule net.minecraft.server.* net.minecraft.server." + prefix + ".@1\n");
         }
 
         // Execute JarJar
