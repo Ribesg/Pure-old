@@ -7,9 +7,9 @@ import net.minecraft.server.release_1_7_10.azq;
  * @author coelho
  * @author Ribesg
  */
-public class NmsDummyPersistentCollection extends azq {
+public class NmsDummyMapStorage extends azq /* MapStorage*/ {
 
-    public NmsDummyPersistentCollection() {
+    public NmsDummyMapStorage() {
         super(null);
     }
 

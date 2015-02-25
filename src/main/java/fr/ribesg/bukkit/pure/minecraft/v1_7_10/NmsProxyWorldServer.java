@@ -14,7 +14,7 @@ import org.bukkit.block.CreatureSpawner;
  * @author coelho
  * @author Ribesg
  */
-public class NmsProxyWorldServer extends mt {
+public class NmsProxyWorldServer extends mt /* WorldServer */ {
 
     private World world;
 

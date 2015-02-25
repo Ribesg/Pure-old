@@ -8,7 +8,7 @@ import java.util.List;
  * @author coelho
  * @author Ribesg
  */
-public class NmsDummyChunkProvider implements apu {
+public class NmsDummyChunkProvider implements apu /* IChunkProvider */ {
 
     protected apx chunk;
 
