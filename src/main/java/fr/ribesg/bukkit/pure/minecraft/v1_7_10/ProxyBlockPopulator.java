@@ -19,18 +19,31 @@ import java.util.Random;
  */
 public class ProxyBlockPopulator extends BlockPopulator {
 
-    /*package */ apu                   nmsGenerator;
-    /*package */ ahb                   nmsWorld;
+    /*package */ apu                   nmsGenerator;            // IChunkProvider
+    /*package */ ahb                   nmsWorld;                // World
     /*package */ NmsDummyChunkProvider nmsChunkProvider;
 
-    private final Map<Long, apx> nmsChunks = new HashMap<>();
+    private final Map<Long, apx> nmsChunks = new HashMap<>();   // Map<Long, Chunk>
 
     public void addChunk(final apx chunk) {
+        /*
+         * (apx) is the obfuscated class name of Chunk, (g) and (h) obviously
+         * represents the chunk's xPosition and zPosition.
+         */
         this.nmsChunks.put(HashUtils.toLong(chunk.g, chunk.h), chunk);
     }
 
-    @SuppressWarnings("deprecation")
     public void populate(final World world, final Random random, final Chunk chunk) {
+        /*
+         * Comments on the following obfuscated things:
+         * - (apx)                  is the obfuscated class  name of Chunk
+         * - (apu.c(int, int))      is the obfuscated method name of IChunkProvider.loadChunk(int, int)
+         * - (apz)                  is the obfuscated class  name of ExtendedBlockStorage
+         * - (apz.i())              is the obfuscated method name of ExtendedBlockStorage.getBlockStorageArray()
+         * - (apz.b(int, int, int)) is the obfuscated method name of ExtendedBlockStorage.getExtBlockMetadata(int, int, int)
+         * - (apu.a(apu, int, int)) is the obfuscated method name of IChunkProvider.populate(IChunkProvider, int, int)
+         */
+
         apx nmsChunk = this.nmsChunks.remove(HashUtils.toLong(chunk.getX(), chunk.getZ()));
         if (nmsChunk == null) {
             nmsChunk = this.nmsGenerator.c(chunk.getX(), chunk.getZ());

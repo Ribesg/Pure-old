@@ -44,25 +44,39 @@ public class ProxyChunkGenerator extends ChunkGenerator {
 
     @Override
     public short[][] generateExtBlockSections(final World world, final Random random, final int x, final int z, final ChunkGenerator.BiomeGrid biomes) {
+        // Make sure that we initialize the NMS part first. Should be called once.
         if (!this.nmsInitialized && !this.initializeNms(world)) {
             return null;
         }
 
-        // generation
+        /*
+         * Generate or load a chunk using the NMS IChunkProvider and gets this chunk's sections.
+         * - (apx)             is the obfuscated class  name of Chunk
+         * - (apu.c(int, int)) is the obfuscated method name of IChunkProvider.loadChunk(int, int)
+         * - (apz)             is the obfuscated class  name of ExtendedBlockStorage
+         * - (apz.i())         is the obfuscated method name of ExtendedBlockStorage.getBlockStorageArray()
+         */
         final apx nmsChunk = this.nmsGenerator.c(x, z);
         final apz[] nmsChunkSections = nmsChunk.i();
 
-        // set biomes
-        int cursorX;
-        int cursorZ;
+        /*
+         * Copy biome-related data from the NMS Chunk to the Bukkit biome grid.
+         * - (apx.m())   is the obfuscated method name of Chunk.getBiomeArray()
+         * - (ahu)       is the obfuscated class  name of BiomeGenBase
+         * - (ahu.d(int) is the obfuscated method name of BiomeGenBase.getFromId(int)
+         * - (ahu.af)    is the obfuscated field  name of BiomeGenBase.biomeName
+         */
         final byte[] biomeBytes = nmsChunk.m();
-        for (cursorX = 0; cursorX < 16; cursorX++) {
-            for (cursorZ = 0; cursorZ < 16; cursorZ++) {
-                biomes.setBiome(cursorX, cursorZ, Biome.valueOf(BiomeUtils.translateBiomeName(ahu.d(biomeBytes[(cursorZ << 4) | cursorX]).af)));
+        for (int i = 0; i < 16; i++) {
+            for (int j = 0; j < 16; j++) {
+                biomes.setBiome(i, j, Biome.valueOf(BiomeUtils.translateBiomeName(ahu.d(biomeBytes[(j << 4) | i]).af)));
             }
         }
 
-        // set result
+        /*
+         * Convert generated chunk data into the format Bukkit wants: a short[][].
+         * - (apz.i()) is the obfuscated method name of ExtendedBlockStorage.getBlockLSBArray()
+         */
         final int maxHeight = world.getMaxHeight();
         final short[][] result = new short[maxHeight / 16][];
         apz nmsChunkSection;
@@ -78,7 +92,7 @@ public class ProxyChunkGenerator extends ChunkGenerator {
             }
         }
 
-        // block populator
+        // Pass the chunk to our BlockPopulator
         ((ProxyBlockPopulator) this.blockPopulator).addChunk(nmsChunk);
 
         return result;
