@@ -85,6 +85,9 @@ public final class MCJarHandler {
                 FileUtils.download(jarContainerPath, version.getUrl(), inputJarName, version.getHash());
             }
 
+            // Remove old remapped jar if it exists
+            Files.deleteIfExists(remappedJarPath);
+
             // Relocate the jar classes packages and put that into our remapped jar file
             FileUtils.relocateJarContent(jarPath, remappedJarPath, version.name().toLowerCase());
 
