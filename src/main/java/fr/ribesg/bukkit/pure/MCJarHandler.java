@@ -3,6 +3,7 @@ package fr.ribesg.bukkit.pure;
 import fr.ribesg.bukkit.pure.util.FileUtils;
 
 import java.io.IOException;
+import java.lang.reflect.Method;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.nio.file.Files;
@@ -21,31 +22,12 @@ public final class MCJarHandler {
 
     private static final Logger LOGGER = Pure.getPluginLogger();
 
-    /**
-     * Contains existing {@link ClassLoader}s for loaded Minecraft Versions.
-     */
-    private static final Map<MCVersion, ClassLoader> CLASSLOADERS = new EnumMap<>(MCVersion.class);
+    private static final Map<MCVersion, Boolean> LOADED = new EnumMap<>(MCVersion.class);
 
-    /**
-     * Gets a ClassLoader matching the provided Minecraft Version.
-     *
-     * @param version the Minecraft version
-     *
-     * @return a ClassLoader matching the provided Minecraft Version
-     *
-     * @throws IOException if anything wrong occurs
-     */
-    public static ClassLoader getClassLoader(final MCVersion version) throws IOException {
-        LOGGER.entering(MCJarHandler.class.getName(), "getClassLoader");
-
-        ClassLoader result = MCJarHandler.CLASSLOADERS.get(version);
-        if (result == null) {
-            MCJarHandler.require(version);
-            result = MCJarHandler.CLASSLOADERS.get(version);
+    static {
+        for (final MCVersion v : MCVersion.values()) {
+            MCJarHandler.LOADED.put(v, false);
         }
-
-        LOGGER.exiting(MCJarHandler.class.getName(), "getClassLoader");
-        return result;
     }
 
     /**
@@ -55,8 +37,8 @@ public final class MCJarHandler {
      * If it doesn't exist it will download the original Minecraft Server jar
      * file from Mojang source then remap the jar classes into a new .remapped.jar
      * file.
-     * The method will then initialize and save a {@link ClassLoader} for this
-     * jar file for easy access with the {@link #getClassLoader} method.
+     * The method will then initialize a {@link ClassLoader} for this jar file
+     * and load all the classes in the jar file.
      *
      * @param version the required version
      *
@@ -65,7 +47,7 @@ public final class MCJarHandler {
     public static void require(final MCVersion version) throws IOException {
         LOGGER.entering(MCJarHandler.class.getName(), "require");
 
-        if (MCJarHandler.CLASSLOADERS.get(version) == null) {
+        if (!MCJarHandler.LOADED.get(version)) {
             // Find (and eventually create) our plugin's folder subfolder containing jar files (plugin/Pure/jars)
             final Path jarContainerPath = Paths.get(Pure.getFolder().getAbsolutePath(), "jars");
             if (!Files.isDirectory(jarContainerPath)) {
@@ -92,9 +74,14 @@ public final class MCJarHandler {
             FileUtils.relocateJarContent(jarPath, remappedJarPath, version.name().toLowerCase());
 
             // Load the remapped jar using our current classloader
-            final URL[] urls = {new URL("jar:file:" + remappedJarPath.toString() + "!/")};
-            final ClassLoader jarClassLoader = URLClassLoader.newInstance(urls);
-            MCJarHandler.CLASSLOADERS.put(version, jarClassLoader);
+            try {
+                final Method addURL = URLClassLoader.class.getDeclaredMethod("addURL", URL.class);
+                addURL.setAccessible(true);
+                addURL.invoke(ClassLoader.getSystemClassLoader(), remappedJarPath.toFile().toURI().toURL());
+            } catch (final ReflectiveOperationException e) {
+                LOGGER.severe("Failed to load classes of " + remappedJarPath);
+                LOGGER.throwing(MCJarHandler.class.getCanonicalName(), "require", e);
+            }
         }
 
         LOGGER.exiting(MCJarHandler.class.getName(), "require");

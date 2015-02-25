@@ -4,3 +4,4 @@ name: ${project.name}
 description: ${project.description}
 url: ${project.url}
 version: maven-version-number
+load: STARTUP

@@ -1,5 +1,7 @@
 package fr.ribesg.bukkit.pure;
 
+import org.bukkit.World.Environment;
+import org.bukkit.generator.ChunkGenerator;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
@@ -72,5 +74,24 @@ public final class Pure extends JavaPlugin {
     @Override
     public void onDisable() {
         Pure.instance = null;
+    }
+
+    @Override
+    public ChunkGenerator getDefaultWorldGenerator(final String worldName, final String id) {
+        final String[] split = id.split(",");
+        final MCVersion version;
+        final Environment environment;
+        if (split.length > 0 && split.length < 3) {
+            version = MCVersion.valueOf(split[0].toUpperCase());
+        } else {
+            Pure.getPluginLogger().severe("Invalid id");
+            return null;
+        }
+        if (split.length > 1) {
+            environment = Environment.valueOf(split[1].toUpperCase());
+        } else {
+            environment = null;
+        }
+        return version.getChunkGenerator(environment);
     }
 }
