@@ -18,6 +18,7 @@ public enum MCVersion {
      */
     RELEASE_1_8(
         "40E23F3823D6F0E3CBADC491CEDB55B8BA53F8AB516B68182DDD1536BABEB291",
+        "FD2BFECB390CEB877F373720EA3D59836A062009F33ED729C223066A964C3313",
         "http://s3.amazonaws.com/Minecraft.Download/versions/1.8/minecraft_server.1.8.jar",
         fr.ribesg.bukkit.pure.minecraft.v1_8.ProxyChunkGenerator.class
     ),
@@ -27,6 +28,7 @@ public enum MCVersion {
      */
     RELEASE_1_7_10(
         "C70870F00C4024D829E154F7E5F4E885B02DD87991726A3308D81F513972F3FC",
+        "30B8E85D2C32670C82BF60892B9D848A131A0746B1F643B8DC4200FFE77C8918",
         "http://s3.amazonaws.com/Minecraft.Download/versions/1.7.10/minecraft_server.1.7.10.jar",
         fr.ribesg.bukkit.pure.minecraft.v1_7_10.ProxyChunkGenerator.class
     ),
@@ -34,9 +36,14 @@ public enum MCVersion {
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */;
 
     /**
-     * Jar hash (SHA-256)
+     * Vanilla jar hash (SHA-256)
      */
-    private final String hash;
+    private final String vanillaHash;
+
+    /**
+     * Remapped jar hash (SHA-256)
+     */
+    private final String remappedHash;
 
     /**
      * Jar location
@@ -51,11 +58,14 @@ public enum MCVersion {
     /**
      * Builds a MCVersion enum value.
      *
-     * @param hash the jar hash (SHA-256)
-     * @param url  the jar location
+     * @param vanillaHash         the vanilla jar hash (SHA-256)
+     * @param remappedHash        the remapped jar hash (SHA-256)
+     * @param url                 the jar location
+     * @param chunkGeneratorClass the class of the associated {@link ChunkGenerator}
      */
-    private MCVersion(final String hash, final String url, final Class<? extends ChunkGenerator> chunkGeneratorClass) {
-        this.hash = hash;
+    private MCVersion(final String vanillaHash, final String remappedHash, final String url, final Class<? extends ChunkGenerator> chunkGeneratorClass) {
+        this.vanillaHash = vanillaHash;
+        this.remappedHash = remappedHash;
         try {
             this.url = new URL(url);
         } catch (final MalformedURLException e) {
@@ -65,12 +75,21 @@ public enum MCVersion {
     }
 
     /**
-     * Gets the jar hash (SHA-256).
+     * Gets the vanilla jar hash (SHA-256).
      *
-     * @return the jar hash (SHA-256)
+     * @return the vanilla jar hash (SHA-256)
      */
-    public String getHash() {
-        return this.hash;
+    public String getVanillaHash() {
+        return this.vanillaHash;
+    }
+
+    /**
+     * Gets the remapped jar hash (SHA-256).
+     *
+     * @return the remapped jar hash (SHA-256)
+     */
+    public String getRemappedHash() {
+        return this.remappedHash;
     }
 
     /**

@@ -1,6 +1,7 @@
 package fr.ribesg.bukkit.pure;
 
 import fr.ribesg.bukkit.pure.util.FileUtils;
+import fr.ribesg.bukkit.pure.util.HashUtils;
 
 import java.io.IOException;
 import java.lang.reflect.Method;
@@ -48,6 +49,7 @@ public final class MCJarHandler {
         LOGGER.entering(MCJarHandler.class.getName(), "require");
 
         if (!MCJarHandler.LOADED.get(version)) {
+            LOGGER.info("Minecraft Version " + version.name() + " required for World Generation");
             // Find (and eventually create) our plugin's folder subfolder containing jar files (plugin/Pure/jars)
             final Path jarContainerPath = Paths.get(Pure.getFolder().getAbsolutePath(), "jars");
             if (!Files.isDirectory(jarContainerPath)) {
@@ -62,22 +64,50 @@ public final class MCJarHandler {
             final Path jarPath = jarContainerPath.resolve(inputJarName);
             final Path remappedJarPath = jarContainerPath.resolve(inputJarName.substring(0, inputJarName.length() - 4) + ".remapped.jar"); // -4 == ".jar"
 
-            // Download the Vanilla jar file if it doesn't exist
+            // Download the Vanilla jar file
             if (!Files.exists(jarPath)) {
-                FileUtils.download(jarContainerPath, version.getUrl(), inputJarName, version.getHash());
+                // Doesn't exist, just download it
+                LOGGER.info("\tDownloading file " + version.getUrl() + " ...");
+                FileUtils.download(jarContainerPath, version.getUrl(), inputJarName, version.getVanillaHash());
+                LOGGER.info("\tDone!");
+            } else {
+                // Already exists, check hash and redownload it if needed
+                LOGGER.info("\tHashing existing jar to make sure it's correct...");
+                final String hash = HashUtils.hashSha256(jarPath);
+                if (version.getVanillaHash().equals(hash)) {
+                    LOGGER.info("\tHash correct!");
+                } else {
+                    LOGGER.info("\tInvalid hash, redownloading file " + version.getUrl() + " ...");
+                    Files.delete(jarPath);
+                    FileUtils.download(jarContainerPath, version.getUrl(), inputJarName, version.getVanillaHash());
+                }
             }
 
-            // Remove old remapped jar if it exists
-            Files.deleteIfExists(remappedJarPath);
-
             // Relocate the jar classes packages and put that into our remapped jar file
-            FileUtils.relocateJarContent(jarPath, remappedJarPath, version.name().toLowerCase());
+            if (!Files.exists(remappedJarPath)) {
+                // Doesn't exist, just relocate it
+                LOGGER.info("\tRelocating jar file classes (this takes time!)...");
+                FileUtils.relocateJarContent(jarPath, remappedJarPath, version);
+                LOGGER.info("\tDone!");
+            } else {
+                // Already exists, check hash and remap if needed
+                LOGGER.info("\tHashing existing remapped jar to make sure it's correct...");
+                final String hash = HashUtils.hashSha256(remappedJarPath);
+                if (version.getRemappedHash().equals(hash)) {
+                    LOGGER.info("\tHash correct!");
+                } else {
+                    LOGGER.info("\tInvalid hash, remapping file...");
+                    Files.delete(remappedJarPath);
+                    FileUtils.relocateJarContent(jarPath, remappedJarPath, version);
+                }
+            }
 
             // Load the remapped jar using our current classloader
             try {
                 final Method addURL = URLClassLoader.class.getDeclaredMethod("addURL", URL.class);
                 addURL.setAccessible(true);
                 addURL.invoke(ClassLoader.getSystemClassLoader(), remappedJarPath.toFile().toURI().toURL());
+                LOGGER.info("Minecraft Version " + version.name() + " ready!");
             } catch (final ReflectiveOperationException e) {
                 LOGGER.severe("Failed to load classes of " + remappedJarPath);
                 LOGGER.throwing(MCJarHandler.class.getCanonicalName(), "require", e);

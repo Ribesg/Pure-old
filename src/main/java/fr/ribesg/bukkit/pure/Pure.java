@@ -1,12 +1,18 @@
 package fr.ribesg.bukkit.pure;
 
+import fr.ribesg.bukkit.pure.util.HashUtils;
 import org.bukkit.World.Environment;
 import org.bukkit.generator.ChunkGenerator;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.logging.*;
+import java.nio.file.DirectoryStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * This is Pure.
@@ -20,7 +26,7 @@ public final class Pure extends JavaPlugin {
     /**
      * Download and remap all known MC version.
      */
-    public static void main(final String[] args) throws IOException {
+    public static void main(final String[] args) throws IOException {/*
         Pure.getPluginLogger().setLevel(Pure.LOG_LEVEL);
         final ConsoleHandler handler = new ConsoleHandler();
         handler.setLevel(Pure.LOG_LEVEL);
@@ -34,6 +40,11 @@ public final class Pure extends JavaPlugin {
 
         for (final MCVersion v : MCVersion.values()) {
             MCJarHandler.require(v);
+        }*/
+        try (final DirectoryStream<Path> s = Files.newDirectoryStream(Paths.get("jars"))) {
+            for (final Path p : s) {
+                System.out.println(p.getFileName() + "\n\t" + HashUtils.hashSha256(p));
+            }
         }
     }
 
@@ -84,13 +95,20 @@ public final class Pure extends JavaPlugin {
         if (split.length > 0 && split.length < 3) {
             version = MCVersion.valueOf(split[0].toUpperCase());
         } else {
-            Pure.getPluginLogger().severe("Invalid id");
+            Pure.getPluginLogger().severe("Invalid id: " + id);
             return null;
         }
         if (split.length > 1) {
             environment = Environment.valueOf(split[1].toUpperCase());
         } else {
             environment = null;
+        }
+        try {
+            MCJarHandler.require(version);
+        } catch (final IOException e) {
+            Pure.getPluginLogger().severe("Failed to install MC Version " + version);
+            Pure.getPluginLogger().throwing(Pure.class.getCanonicalName(), "getDefaultWorldGenerator", e);
+            return null;
         }
         return version.getChunkGenerator(environment);
     }

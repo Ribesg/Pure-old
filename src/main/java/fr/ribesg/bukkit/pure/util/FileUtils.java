@@ -1,6 +1,7 @@
 package fr.ribesg.bukkit.pure.util;
 
 import com.tonicsystems.jarjar.Main;
+import fr.ribesg.bukkit.pure.MCVersion;
 import fr.ribesg.bukkit.pure.Pure;
 
 import java.io.*;
@@ -82,13 +83,14 @@ public final class FileUtils {
      *
      * @param inputJar  input jar file
      * @param outputJar output jar file
-     * @param prefix    prefix for all packages
+     * @param version   Minecraft version of those jar files
      *
      * @throws IOException if anything goes wrong
      */
-    public static void relocateJarContent(final Path inputJar, final Path outputJar, final String prefix) throws IOException {
+    public static void relocateJarContent(final Path inputJar, final Path outputJar, final MCVersion version) throws IOException {
         LOGGER.entering(FileUtils.class.getName(), "relocateJarContent");
 
+        final String prefix = version.name().toLowerCase();
         final String rulesFilePath = inputJar.toAbsolutePath().toString() + ".tmp";
 
         // Create JarJar rules file
@@ -131,6 +133,14 @@ public final class FileUtils {
                 outputJar.toString()
             });
             LOGGER.fine("Done!");
+
+            final String wantedHash = version.getRemappedHash();
+            final String hash = HashUtils.hashSha256(outputJar);
+            if (hash.equals(wantedHash)) {
+                LOGGER.fine("The remapped file is correct!");
+            } else {
+                throw new IOException("Remapped file hash doesn't match awaited hash\nAwaited: " + wantedHash + "\nReceived: " + hash);
+            }
 
             LOGGER.exiting(FileUtils.class.getName(), "relocateJarContent");
         } catch (final Exception e) {

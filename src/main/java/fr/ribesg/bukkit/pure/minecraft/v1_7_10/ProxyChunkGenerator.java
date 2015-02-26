@@ -38,7 +38,7 @@ public class ProxyChunkGenerator extends ChunkGenerator {
 
     public ProxyChunkGenerator(final Environment environment) {
         this.blockPopulator = new ProxyBlockPopulator();
-        this.environment = environment;
+        this.environment = environment == null ? Environment.NORMAL : environment;
         this.nmsInitialized = false;
     }
 
