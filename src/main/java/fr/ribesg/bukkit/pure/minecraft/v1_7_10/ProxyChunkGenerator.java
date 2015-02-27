@@ -67,9 +67,10 @@ public class ProxyChunkGenerator extends ChunkGenerator {
          * - (ahu.af)    is the obfuscated field  name of BiomeGenBase.biomeName
          */
         final byte[] biomeBytes = nmsChunk.m();
-        for (int i = 0; i < 16; i++) {
-            for (int j = 0; j < 16; j++) {
-                biomes.setBiome(i, j, Biome.valueOf(BiomeUtils.translateBiomeName(ahu.d(biomeBytes[(j << 4) | i]).af)));
+        int i, j; // Reuse i later, don't redeclare j for each iteration
+        for (i = 0; i < 16; i++) {
+            for (j = 0; j < 16; j++) {
+                biomes.setBiome(i, j, Biome.valueOf(BiomeUtils.translateBiomeName(ahu.d(biomeBytes[(j << 4) | i] & 0xFF).af)));
             }
         }
 
@@ -80,14 +81,14 @@ public class ProxyChunkGenerator extends ChunkGenerator {
         final int maxHeight = world.getMaxHeight();
         final short[][] result = new short[maxHeight / 16][];
         apz nmsChunkSection;
-        for (int i = 0; i < result.length; i++) {
+        for (i = 0; i < result.length; i++) {
             nmsChunkSection = nmsChunkSections[i];
             if (nmsChunkSection == null) {
                 continue;
             }
             result[i] = new short[16 * 16 * 16];
             final byte[] idArray = nmsChunkSection.g();
-            for (int j = 0; j < idArray.length; j++) {
+            for (j = 0; j < idArray.length; j++) {
                 result[i][j] = idArray[j];
             }
         }
