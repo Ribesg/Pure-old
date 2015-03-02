@@ -8,6 +8,7 @@ import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
+import org.bukkit.block.Chest;
 import org.bukkit.block.CreatureSpawner;
 
 /**
@@ -52,9 +53,10 @@ public class NmsProxyWorldServer extends mt /* WorldServer */ {
         if (blockState == null) {
             return null;
         }
-        // todo: we need support for a chest
         if (blockState instanceof CreatureSpawner) {
             return new NmsProxyTileMobSpawner((CreatureSpawner) blockState);
+        } else if (blockState instanceof Chest) {
+            return new NmsProxyTileChest((Chest) blockState);
         } else {
             System.out.println("NMSProxyWorldServer missing: " + blockState.getClass().getName());
         }
