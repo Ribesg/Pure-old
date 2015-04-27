@@ -20,19 +20,14 @@ public final class ReflectionUtils {
      *
      * @return an instance of the provided class
      *
-     * @throws ReflectiveOperationException fi anything goes wrong
+     * @throws ReflectiveOperationException if anything goes wrong
      */
     @SuppressWarnings("unchecked")
     public static <T> T newInstance(final Class<T> clazz) throws ReflectiveOperationException {
-        try {
-            final ReflectionFactory reflectionFactory = ReflectionFactory.getReflectionFactory();
-            final Constructor<?> objectConstructor = Object.class.getDeclaredConstructor();
-            final Constructor<?> serializeConstructor = reflectionFactory.newConstructorForSerialization(clazz, objectConstructor);
-            return (T) serializeConstructor.newInstance();
-        } catch (final NoSuchMethodException ignored) {
-            // Can't be thrown when getting the constructor of Object!
-            return null; // Dead code
-        }
+        final ReflectionFactory reflectionFactory = ReflectionFactory.getReflectionFactory();
+        final Constructor<?> objectConstructor = Object.class.getDeclaredConstructor();
+        final Constructor<?> serializeConstructor = reflectionFactory.newConstructorForSerialization(clazz, objectConstructor);
+        return (T) serializeConstructor.newInstance();
     }
 
     /**
@@ -44,10 +39,9 @@ public final class ReflectionUtils {
      * @param fieldName the name of the field
      * @param value     the new value of the field
      *
-     * @throws NoSuchFieldException   if the field doesn't exist in the class
-     * @throws IllegalAccessException if security issues prevent this call
+     * @throws ReflectiveOperationException if anything goes wrong
      */
-    public static void set(final Class<?> clazz, final Object obj, final String fieldName, final Object value) throws NoSuchFieldException, IllegalAccessException {
+    public static void set(final Class<?> clazz, final Object obj, final String fieldName, final Object value) throws ReflectiveOperationException {
         final Field field = clazz.getDeclaredField(fieldName);
         field.setAccessible(true);
 
@@ -73,10 +67,9 @@ public final class ReflectionUtils {
      *
      * @return the field's value
      *
-     * @throws NoSuchFieldException   if the field doesn't exist in the class
-     * @throws IllegalAccessException if security issues prevent this call
+     * @throws ReflectiveOperationException if anything goes wrong
      */
-    public static <T> T get(final Class<?> clazz, final Object obj, final String fieldName, final Class<T> fieldClass) throws NoSuchFieldException, IllegalAccessException {
+    public static <T> T get(final Class<?> clazz, final Object obj, final String fieldName, final Class<T> fieldClass) throws ReflectiveOperationException {
         final Field field = clazz.getDeclaredField(fieldName);
         field.setAccessible(true);
         return fieldClass.cast(field.get(obj));

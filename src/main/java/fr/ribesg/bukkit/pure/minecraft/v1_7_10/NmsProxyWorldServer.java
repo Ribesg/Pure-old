@@ -19,6 +19,11 @@ public class NmsProxyWorldServer extends mt /* WorldServer */ {
 
     private World world;
 
+    /*
+     * The second argument of the super constructor seems to be @NotNull.
+     * There is no @SuppressWarnings rule specifically for this, so all it is.
+     */
+    @SuppressWarnings("all")
     public NmsProxyWorldServer() {
         super(null, null, null, 0, null, null);
     }

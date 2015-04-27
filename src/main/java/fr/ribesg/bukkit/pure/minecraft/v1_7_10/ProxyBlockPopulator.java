@@ -33,6 +33,7 @@ public class ProxyBlockPopulator extends BlockPopulator {
         this.nmsChunks.put(HashUtils.toLong(chunk.g, chunk.h), chunk);
     }
 
+    @SuppressWarnings("deprecation")
     public void populate(final World world, final Random random, final Chunk chunk) {
         /*
          * Comments on the following obfuscated things:

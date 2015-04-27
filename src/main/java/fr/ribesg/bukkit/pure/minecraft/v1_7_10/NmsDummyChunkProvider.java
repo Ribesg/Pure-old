@@ -9,22 +9,22 @@ import java.util.List;
  * @author Ribesg
  */
 /*
- * - (apx)                              is the obfuscated class  name for Chunk
- * - (apu.c())                          is the obfuscated method name for IChunkProvider.saveExtraData()
- * - (apu.e())                          is the obfuscated method name for IChunkProvider.canSave()
- * - (apu.a(ahb, String, int, int, int) is the obfuscated method name for IChunkProvider.??? // FIXME!
- * - (apu.d(int, int)                   is the obfuscated method name for IChunkProvider.provideChunk(int, int)
- * - (apu.a(apu, int, int))             is the obfuscated method name for IChunkProvider.??? // FIXME!
- * - (apu.g())                          is the obfuscated method name for IChunkProvider.getLoadedChunkCount()
- * - (sx                                is the obfuscated class  name for EnumCreatureType
- * - (apu.a(sx, int, int, int)          is the obfuscated method name for IChunkProvider.getPossibleCreatures(EnumCreatureType, int, int, int)
- * - (apu.f())                          is the obfuscated method name for IChunkProvider.makeString()
- * - (apu.c(int, int))                  is the obfuscated method name for IChunkProvider.loadChunk(int, int)
- * - (apu.a(int, int))                  is the obfuscated method name for IChunkProvider.chunkExists(int, int)
- * - (apu.e(int, int))                  is the obfuscated method name for IChunkProvider.recreateStructures(int, int)
- * - (qk)                               is the obfuscated class  name for IProgressUpdate
- * - (apu.a(boolean, qk)                is the obfuscated method name for IChunkProvider.saveChunks(boolean, IProgressUpdate)
- * - (apu.d())                          is the obfuscated method name for IChunkProvider.unloadQueuedChunks()
+ * - (apx)                               is the obfuscated class  name for Chunk
+ * - (apu.c())                           is the obfuscated method name for IChunkProvider.saveExtraData()
+ * - (apu.e())                           is the obfuscated method name for IChunkProvider.canSave()
+ * - (apu.a(ahb, String, int, int, int)) is the obfuscated method name for IChunkProvider.??? // FIXME!
+ * - (apu.d(int, int))                   is the obfuscated method name for IChunkProvider.provideChunk(int, int)
+ * - (apu.a(apu, int, int))              is the obfuscated method name for IChunkProvider.??? // FIXME!
+ * - (apu.g())                           is the obfuscated method name for IChunkProvider.getLoadedChunkCount()
+ * - (sx)                                is the obfuscated class  name for EnumCreatureType
+ * - (apu.a(sx, int, int, int))          is the obfuscated method name for IChunkProvider.getPossibleCreatures(EnumCreatureType, int, int, int)
+ * - (apu.f())                           is the obfuscated method name for IChunkProvider.makeString()
+ * - (apu.c(int, int))                   is the obfuscated method name for IChunkProvider.loadChunk(int, int)
+ * - (apu.a(int, int))                   is the obfuscated method name for IChunkProvider.chunkExists(int, int)
+ * - (apu.e(int, int))                   is the obfuscated method name for IChunkProvider.recreateStructures(int, int)
+ * - (qk)                                is the obfuscated class  name for IProgressUpdate
+ * - (apu.a(boolean, qk))                is the obfuscated method name for IChunkProvider.saveChunks(boolean, IProgressUpdate)
+ * - (apu.d())                           is the obfuscated method name for IChunkProvider.unloadQueuedChunks()
  */
 public class NmsDummyChunkProvider implements apu /* IChunkProvider */ {
 
@@ -86,13 +86,7 @@ public class NmsDummyChunkProvider implements apu /* IChunkProvider */ {
     @Override
     public boolean a(final int x, final int y) {
         // TODO?
-        if (this.chunk == null) {
-            return false;
-        }
-        if (this.chunk.g != x || this.chunk.h != y) {
-            return false;
-        }
-        return true;
+        return this.chunk != null && !(this.chunk.g != x || this.chunk.h != y);
     }
 
     @Override

@@ -11,7 +11,7 @@ import org.bukkit.generator.BlockPopulator;
 import org.bukkit.generator.ChunkGenerator;
 
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 import java.util.logging.Logger;
@@ -183,6 +183,6 @@ public class ProxyChunkGenerator extends ChunkGenerator {
         if (!this.nmsInitialized && !this.initializeNms(world)) {
             return null;
         }
-        return Arrays.asList(this.blockPopulator);
+        return Collections.singletonList(this.blockPopulator);
     }
 }
