@@ -18,11 +18,9 @@ public final class ReflectionUtils {
      * @param <T>   the type
      *
      * @return an instance of the provided class
-     *
-     * @throws ReflectiveOperationException if anything goes wrong
      */
     @SuppressWarnings("unchecked")
-    public static <T> T newInstance(final Class<T> clazz) throws ReflectiveOperationException {
+    public static <T> T newInstance(final Class<T> clazz) {
         return new ObjenesisStd().newInstance(clazz);
     }
 
