@@ -1,8 +1,7 @@
 package fr.ribesg.bukkit.pure.util;
 
-import sun.reflect.ReflectionFactory;
+import org.objenesis.ObjenesisStd;
 
-import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 
@@ -24,10 +23,7 @@ public final class ReflectionUtils {
      */
     @SuppressWarnings("unchecked")
     public static <T> T newInstance(final Class<T> clazz) throws ReflectiveOperationException {
-        final ReflectionFactory reflectionFactory = ReflectionFactory.getReflectionFactory();
-        final Constructor<?> objectConstructor = Object.class.getDeclaredConstructor();
-        final Constructor<?> serializeConstructor = reflectionFactory.newConstructorForSerialization(clazz, objectConstructor);
-        return (T) serializeConstructor.newInstance();
+        return new ObjenesisStd().newInstance(clazz);
     }
 
     /**

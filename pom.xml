@@ -68,6 +68,11 @@
          <artifactId>jarjar</artifactId>
          <version>1.4</version>
       </dependency>
+      <dependency>
+         <groupId>org.objenesis</groupId>
+         <artifactId>objenesis</artifactId>
+         <version>2.1</version>
+      </dependency>
 
       <dependency>
          <groupId>net.minecraft.server</groupId>
@@ -117,6 +122,7 @@
                      <artifactSet>
                         <includes>
                            <include>com.tonicsystems:jarjar</include>
+                           <include>org.objenesis:objenesis</include>
                         </includes>
                      </artifactSet>
                   </configuration>
