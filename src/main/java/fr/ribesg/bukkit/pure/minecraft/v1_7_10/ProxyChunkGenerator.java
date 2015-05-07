@@ -79,14 +79,13 @@ public class ProxyChunkGenerator extends ChunkGenerator {
          * - (apz.i()) is the obfuscated method name of ExtendedBlockStorage.getBlockLSBArray()
          */
         final int maxHeight = world.getMaxHeight();
-        final short[][] result = new short[maxHeight / 16][];
+        final short[][] result = new short[maxHeight / 16][16 * 16 * 16];
         apz nmsChunkSection;
         for (i = 0; i < result.length; i++) {
             nmsChunkSection = nmsChunkSections[i];
             if (nmsChunkSection == null) {
                 continue;
             }
-            result[i] = new short[16 * 16 * 16];
             final byte[] idArray = nmsChunkSection.g();
             for (j = 0; j < idArray.length; j++) {
                 result[i][j] = idArray[j];
