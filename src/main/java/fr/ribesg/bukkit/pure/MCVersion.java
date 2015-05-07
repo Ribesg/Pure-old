@@ -63,7 +63,7 @@ public enum MCVersion {
      * @param url                 the jar location
      * @param chunkGeneratorClass the class of the associated {@link ChunkGenerator}
      */
-    private MCVersion(final String vanillaHash, final String remappedHash, final String url, final Class<? extends ChunkGenerator> chunkGeneratorClass) {
+    MCVersion(final String vanillaHash, final String remappedHash, final String url, final Class<? extends ChunkGenerator> chunkGeneratorClass) {
         this.vanillaHash = vanillaHash;
         this.remappedHash = remappedHash;
         try {
@@ -114,6 +114,9 @@ public enum MCVersion {
                 return this.chunkGeneratorClass.getDeclaredConstructor(Environment.class).newInstance(environment);
             } catch (final NoSuchMethodException e1) {
                 try {
+                    if (environment != null) {
+                        Pure.getPluginLogger().warning("Ignored environment parameter for MC version " + this);
+                    }
                     return this.chunkGeneratorClass.getDeclaredConstructor().newInstance();
                 } catch (final NoSuchMethodException e2) {
                     throw new RuntimeException("Associated proxy ChunkGenerator class has no valid constructor ("

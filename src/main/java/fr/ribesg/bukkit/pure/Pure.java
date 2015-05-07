@@ -93,13 +93,23 @@ public final class Pure extends JavaPlugin {
         final MCVersion version;
         final Environment environment;
         if (split.length > 0 && split.length < 3) {
-            version = MCVersion.valueOf(split[0].toUpperCase());
+            try {
+                version = MCVersion.valueOf(split[0].toUpperCase());
+            } catch (final IllegalArgumentException e) {
+                Pure.getPluginLogger().severe("Invalid MC version String: " + split[0].toUpperCase());
+                return null;
+            }
         } else {
             Pure.getPluginLogger().severe("Invalid id: " + id);
             return null;
         }
         if (split.length > 1) {
-            environment = Environment.valueOf(split[1].toUpperCase());
+            try {
+                environment = Environment.valueOf(split[1].toUpperCase());
+            } catch (final IllegalArgumentException e) {
+                Pure.getPluginLogger().severe("Invalid Bukkit Environment String: " + split[1].toUpperCase());
+                return null;
+            }
         } else {
             environment = null;
         }
