@@ -51,16 +51,16 @@ public class ProxyBlockPopulator extends BlockPopulator {
         }
         final apz[] nmsChunkSections = nmsChunk.i();
         apz nmsChunkSection;
-        for (int i = 0; i < nmsChunkSections.length; i++) {
+        int i, x, y, z, meta;
+        for (i = 0; i < nmsChunkSections.length; i++) {
             nmsChunkSection = nmsChunkSections[i];
             if (nmsChunkSection == null) {
                 continue;
             }
 
-            int meta;
-            for (int y = 0; y < 16; y++) {
-                for (int x = 0; x < 16; x++) {
-                    for (int z = 0; z < 16; z++) {
+            for (y = 0; y < 16; y++) {
+                for (x = 0; x < 16; x++) {
+                    for (z = 0; z < 16; z++) {
                         meta = nmsChunkSection.b(x, y, z);
                         if (meta == 0) {
                             continue;
