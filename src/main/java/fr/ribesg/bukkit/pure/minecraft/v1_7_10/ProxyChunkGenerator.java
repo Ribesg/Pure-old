@@ -30,9 +30,9 @@ public class ProxyChunkGenerator extends ChunkGenerator {
         adb.l(); // Item.registerItems();
     }
 
-    private final BlockPopulator blockPopulator;
-    private final Environment    environment;
-    private       boolean        nmsInitialized;
+    private final ProxyBlockPopulator blockPopulator;
+    private final Environment         environment;
+    private       boolean             nmsInitialized;
 
     private apu nmsGenerator;   // IChunkProvider
 
@@ -94,7 +94,7 @@ public class ProxyChunkGenerator extends ChunkGenerator {
         }
 
         // Pass the chunk to our BlockPopulator
-        ((ProxyBlockPopulator) this.blockPopulator).addChunk(nmsChunk);
+        this.blockPopulator.addChunk(nmsChunk);
 
         return result;
     }
@@ -160,15 +160,16 @@ public class ProxyChunkGenerator extends ChunkGenerator {
              * - (aqo.a(ahb)) is the obfuscated method name of WorldProvider.registerWorld(World)
              * - (aqo.c())    is the obfuscated method name of WorldProvider.createChunkGenerator()
              */
+            @SuppressWarnings("deprecation")
             final aqo nmsWorldProvider = aqo.a(this.environment.getId());
             nmsWorldProvider.a(nmsWorld);
             ReflectionUtils.set(nmsWorld.getClass().getSuperclass().getSuperclass(), nmsWorld, "t", nmsWorldProvider);
             this.nmsGenerator = nmsWorldProvider.c();
 
             // Here wa "transfer" some of the NMS objects we created to our BlockPopulator
-            ((ProxyBlockPopulator) this.blockPopulator).nmsGenerator = this.nmsGenerator;
-            ((ProxyBlockPopulator) this.blockPopulator).nmsWorld = nmsWorld;
-            ((ProxyBlockPopulator) this.blockPopulator).nmsChunkProvider = nmsChunkProvider;
+            this.blockPopulator.nmsGenerator = this.nmsGenerator;
+            this.blockPopulator.nmsWorld = nmsWorld;
+            this.blockPopulator.nmsChunkProvider = nmsChunkProvider;
         } catch (final ReflectiveOperationException e) {
             LOGGER.severe("Error while initializing ProxyChunkGenerator");
             LOGGER.throwing(ProxyChunkGenerator.class.getName(), "initializeNms", e);
@@ -183,6 +184,6 @@ public class ProxyChunkGenerator extends ChunkGenerator {
         if (!this.nmsInitialized && !this.initializeNms(world)) {
             return null;
         }
-        return Collections.singletonList(this.blockPopulator);
+        return Collections.singletonList((BlockPopulator) this.blockPopulator);
     }
 }
