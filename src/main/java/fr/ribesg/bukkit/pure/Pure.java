@@ -89,18 +89,23 @@ public final class Pure extends JavaPlugin {
 
     @Override
     public ChunkGenerator getDefaultWorldGenerator(final String worldName, final String id) {
+        if (id == null || id.isEmpty()) {
+            Pure.getPluginLogger().severe("Parameters are required for the Pure world generator.");
+            return null;
+        }
+
         final String[] split = id.split(",");
+        if (split.length > 2) {
+            Pure.getPluginLogger().severe("Invalid id: " + id);
+            return null;
+        }
+
         final MCVersion version;
         final Environment environment;
-        if (split.length > 0 && split.length < 3) {
-            try {
-                version = MCVersion.valueOf(split[0].toUpperCase());
-            } catch (final IllegalArgumentException e) {
-                Pure.getPluginLogger().severe("Invalid MC version String: " + split[0].toUpperCase());
-                return null;
-            }
-        } else {
-            Pure.getPluginLogger().severe("Invalid id: " + id);
+        try {
+            version = MCVersion.valueOf(split[0].toUpperCase());
+        } catch (final IllegalArgumentException e) {
+            Pure.getPluginLogger().severe("Invalid MC version String: " + split[0].toUpperCase());
             return null;
         }
         if (split.length > 1) {
@@ -113,6 +118,7 @@ public final class Pure extends JavaPlugin {
         } else {
             environment = null;
         }
+
         try {
             MCJarHandler.require(version);
         } catch (final IOException e) {
@@ -120,6 +126,7 @@ public final class Pure extends JavaPlugin {
             Pure.getPluginLogger().throwing(Pure.class.getCanonicalName(), "getDefaultWorldGenerator", e);
             return null;
         }
+
         return version.getChunkGenerator(environment);
     }
 }

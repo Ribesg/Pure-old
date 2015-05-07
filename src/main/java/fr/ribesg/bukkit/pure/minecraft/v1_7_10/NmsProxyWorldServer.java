@@ -1,5 +1,6 @@
 package fr.ribesg.bukkit.pure.minecraft.v1_7_10;
 
+import fr.ribesg.bukkit.pure.Pure;
 import net.minecraft.server.release_1_7_10.aji;
 import net.minecraft.server.release_1_7_10.aor;
 import net.minecraft.server.release_1_7_10.mt;
@@ -17,6 +18,7 @@ import org.bukkit.block.CreatureSpawner;
  */
 public class NmsProxyWorldServer extends mt /* WorldServer */ {
 
+    @SuppressWarnings("all") // No warning name for "variable is never assigned"
     private World world;
 
     /*
@@ -63,19 +65,19 @@ public class NmsProxyWorldServer extends mt /* WorldServer */ {
         } else if (blockState instanceof Chest) {
             return new NmsProxyTileChest((Chest) blockState);
         } else {
-            System.out.println("NMSProxyWorldServer missing: " + blockState.getClass().getName());
+            Pure.getPluginLogger().warning("NMSProxyWorldServer missing: " + blockState.getClass().getName());
         }
         return null;
     }
 
     @Override
     public void e(final int x, final int y, final int z, final aji paramaji) {
-        // dummy - block updates?
+        // NOP
     }
 
     @Override
     public boolean d(final sa arg0) {
-        // dummy
+        // NOP
         return false;
     }
 }
