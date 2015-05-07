@@ -15,19 +15,17 @@ public class NmsDummyMapStorage extends azq /* MapStorage*/ {
 
     @Override
     public void a(final String arg0, final ayl arg1) {
-        // dummy
+        // NOP
     }
 
     @Override
     public int a(final String arg0) {
-        // dummy
-        return 0;
+        return 0; // NOP
     }
 
     @SuppressWarnings("rawtypes")
     @Override
     public ayl a(final Class arg0, final String arg1) {
-        // dummy
-        return null;
+        return null; // NOP
     }
 }

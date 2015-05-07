@@ -13,6 +13,4 @@ public class NmsProxyTileChest extends aow {
     public NmsProxyTileChest(final Chest chest) {
         this.chest = chest;
     }
-
-    // TODO Override things?
 }

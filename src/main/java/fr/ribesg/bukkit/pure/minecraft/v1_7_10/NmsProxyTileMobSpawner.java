@@ -14,26 +14,26 @@ public class NmsProxyTileMobSpawner extends apj {
 
     private final CreatureSpawner creatureSpawner;
 
-    public class NMSProxyMobSpawner extends agq {
+    public class NmsProxyMobSpawner extends agq {
 
         public ahb a() {
-            return null;
+            return null; // NOP
         }
 
         public void a(final int arg0) {
-
+            // NOP
         }
 
         public int b() {
-            return 0;
+            return 0; // NOP
         }
 
         public int c() {
-            return 0;
+            return 0; // NOP
         }
 
         public int d() {
-            return 0;
+            return 0; // NOP
         }
 
         @Override
@@ -52,6 +52,6 @@ public class NmsProxyTileMobSpawner extends apj {
 
     @Override
     public agq a() {
-        return new NMSProxyMobSpawner();
+        return new NmsProxyMobSpawner();
     }
 }

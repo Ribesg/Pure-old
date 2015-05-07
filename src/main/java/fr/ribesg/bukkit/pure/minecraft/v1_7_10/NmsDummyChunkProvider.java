@@ -32,75 +32,73 @@ public class NmsDummyChunkProvider implements apu /* IChunkProvider */ {
 
     @Override
     public void c() {
-        // TODO?
+        // NOP
     }
 
     @Override
     public boolean e() {
-        return false; // TODO?
+        return false; // NOP
     }
 
     @Override
     public agt a(final ahb arg0, final String arg1, final int arg2, final int arg3, final int arg4) {
-        return null; // TODO?
+        return null; // NOP
     }
 
     @Override
     public apx d(final int x, final int y) {
-        return this.c(x, y); // TODO?
+        return this.c(x, y);
     }
 
     @Override
     public void a(final apu arg0, final int arg1, final int arg2) {
-        // TODO?
+        // NOP
     }
 
     @Override
     public int g() {
-        return 0; // TODO?
+        return 0; // NOP
     }
 
     @SuppressWarnings("rawtypes")
     @Override
     public List a(final sx arg0, final int arg1, final int arg2, final int arg3) {
-        return null; // TODO?
+        return null; // NOP
     }
 
     @Override
     public String f() {
-        return null; // TODO?
+        return null; // NOP
     }
 
     @Override
     public apx c(final int x, final int y) {
-        // TODO?
         if (this.chunk == null) {
             return null;
         }
         if (this.chunk.g != x || this.chunk.h != y) {
-            return new net.minecraft.server.release_1_7_10.apw(this.chunk.e, x, y);
+            return new apw(this.chunk.e, x, y);
         }
         return this.chunk;
     }
 
     @Override
     public boolean a(final int x, final int y) {
-        // TODO?
         return this.chunk != null && !(this.chunk.g != x || this.chunk.h != y);
     }
 
     @Override
     public void e(final int arg0, final int arg1) {
-        // TODO?
+        // NOP
     }
 
     @Override
     public boolean a(final boolean arg0, final qk arg1) {
-        return false; // TODO?
+        return false; // NOP
     }
 
     @Override
     public boolean d() {
-        return false; // TODO?
+        return false; // NOP
     }
 }
