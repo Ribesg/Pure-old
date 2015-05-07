@@ -42,6 +42,7 @@ public class ProxyChunkGenerator extends ChunkGenerator {
         this.nmsInitialized = false;
     }
 
+    @SuppressWarnings("deprecation")
     @Override
     public short[][] generateExtBlockSections(final World world, final Random random, final int x, final int z, final ChunkGenerator.BiomeGrid biomes) {
         // Make sure that we initialize the NMS part first. Should be called once.
