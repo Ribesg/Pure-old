@@ -18,18 +18,7 @@ public class NmsProxyTileChest extends aow /* TileEntityChest */ {
 
     private final Inventory inv;
 
-    /*
-     * Note that (aow) extends (aor).
-     * (aow)   is the obfuscated class name of TileEntityChest
-     * (aor)   is the obfuscated class name of TileEntity
-     * (aor.c) is the obfuscated field name of TileEntity.xCoord
-     * (aor.d) is the obfuscated field name of TileEntity.yCoord
-     * (aor.e) is the obfuscated field name of TileEntity.zCoord
-     */
     public NmsProxyTileChest(final Chest chest) {
-        this.c = chest.getX();
-        this.d = chest.getY();
-        this.e = chest.getZ();
         this.inv = chest.getBlockInventory();
     }
 
@@ -66,7 +55,6 @@ public class NmsProxyTileChest extends aow /* TileEntityChest */ {
          */
         // Enchanted Books can be generated, let's handle that.
         if (item.getType() == Material.ENCHANTED_BOOK) {
-            Pure.getPluginLogger().info("Enchanted Book! " + this.c + " " + this.d + " " + this.e);
             final dh itemNbt = addArg.d;
             if (itemNbt != null) {
                 final dq storedEnchNbt = (dq) itemNbt.a("StoredEnchantments");
@@ -101,7 +89,6 @@ public class NmsProxyTileChest extends aow /* TileEntityChest */ {
             if (ench == null) {
                 Pure.getPluginLogger().warning("Unknown Enchantment ID (" + enchId + "), ignored.");
             } else {
-                Pure.getPluginLogger().info("Adding enchantment " + ench + " with level " + enchLvl);
                 meta.addStoredEnchant(ench, enchLvl, false);
             }
         } catch (final ClassCastException | NullPointerException e) {
