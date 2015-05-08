@@ -33,6 +33,7 @@ public final class FileUtils {
      * @param destinationFolder the folder in which the file will be saved
      * @param sourceUrl         the URL to the file to download
      * @param wantedFileName    the final name of the saved file
+     * @param wantedHash        the required hash for the file or null if there is none
      *
      * @return the path to the downloaded file
      */
@@ -53,14 +54,19 @@ public final class FileUtils {
             ) {
                 LOGGER.fine("Downloading " + sourceUrl + " ...");
                 out.getChannel().transferFrom(source, 0, Long.MAX_VALUE);
-                LOGGER.fine("Done! Checking hash...");
-                final String hash = HashUtils.hashSha256(finalFile.toPath());
-                if (hash.equals(wantedHash)) {
-                    LOGGER.fine("The downloaded file is correct!");
-                    break;
+                if (wantedHash != null) {
+                    LOGGER.fine("Done! Checking hash...");
+                    final String hash = HashUtils.hashSha256(finalFile.toPath());
+                    if (hash.equals(wantedHash)) {
+                        LOGGER.fine("The downloaded file is correct!");
+                        break;
+                    } else {
+                        LOGGER.warning("The downloaded file is incorrect!");
+                        throw new IOException("Download file hash doesn't match awaited hash\nAwaited: " + wantedHash + "\nReceived: " + hash);
+                    }
                 } else {
-                    LOGGER.warning("The downloaded file is incorrect!");
-                    throw new IOException("Download file hash doesn't match awaited hash\nAwaited: " + wantedHash + "\nReceived: " + hash);
+                    LOGGER.fine("Done!");
+                    break;
                 }
             } catch (final IOException e) {
                 LOGGER.warning("Attempt n°" + attempt + " failed!");
@@ -84,10 +90,11 @@ public final class FileUtils {
      * @param inputJar  input jar file
      * @param outputJar output jar file
      * @param version   Minecraft version of those jar files
+     * @param checkHash if we check for file hashes or not
      *
      * @throws IOException if anything goes wrong
      */
-    public static void relocateJarContent(final Path inputJar, final Path outputJar, final MCVersion version) throws IOException {
+    public static void relocateJarContent(final Path inputJar, final Path outputJar, final MCVersion version, final boolean checkHash) throws IOException {
         LOGGER.entering(FileUtils.class.getName(), "relocateJarContent");
 
         final String prefix = version.name().toLowerCase();
@@ -134,12 +141,14 @@ public final class FileUtils {
             });
             LOGGER.fine("Done!");
 
-            final String wantedHash = version.getRemappedHash();
-            final String hash = HashUtils.hashSha256(outputJar);
-            if (hash.equals(wantedHash)) {
-                LOGGER.fine("The remapped file is correct!");
-            } else {
-                throw new IOException("Remapped file hash doesn't match awaited hash\nAwaited: " + wantedHash + "\nReceived: " + hash);
+            if (checkHash) {
+                final String wantedHash = version.getRemappedHash();
+                final String hash = HashUtils.hashSha256(outputJar);
+                if (hash.equals(wantedHash)) {
+                    LOGGER.fine("The remapped file is correct!");
+                } else {
+                    throw new IOException("Remapped file hash doesn't match awaited hash\nAwaited: " + wantedHash + "\nReceived: " + hash);
+                }
             }
 
             LOGGER.exiting(FileUtils.class.getName(), "relocateJarContent");

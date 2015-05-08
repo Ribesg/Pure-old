@@ -14,23 +14,73 @@ import java.net.URL;
 public enum MCVersion {
 
     /**
-     * Minecraft 1.8 released 2014-09-02.
+     * Minecraft 1.2.5 (2012-03-29) TODO
      */
-    RELEASE_1_8(
-        "40E23F3823D6F0E3CBADC491CEDB55B8BA53F8AB516B68182DDD1536BABEB291",
-        "FD2BFECB390CEB877F373720EA3D59836A062009F33ED729C223066A964C3313",
-        "http://s3.amazonaws.com/Minecraft.Download/versions/1.8/minecraft_server.1.8.jar",
-        fr.ribesg.bukkit.pure.minecraft.v1_8.ProxyChunkGenerator.class
+    R1_2_5(
+        "19285D7D16AEE740F5A0584F0D80A4940F273A97F5A3EAF251FC1C6C3F2982D1",
+        "057582080FA409EE28AF90F99BA1F32EE97A87C88900A8F64DE4AED2E336B276",
+        "https://s3.amazonaws.com/Minecraft.Download/versions/1.2.5/minecraft_server.1.2.5.jar",
+        null
     ),
 
     /**
-     * Minecraft 1.7.10 released 2014-06-26.
+     * Minecraft 1.3.2 (2012-08-15) TODO
      */
-    RELEASE_1_7_10(
+    R1_3_2(
+        "0795E098D970B459832750D4C6C2C4F58EF55A333A67281418318275E6026EBA",
+        "7B01306E093AFFE866DFA4EAC90E10C7656F09971534D0E5DE91C3CD23E1B705",
+        "https://s3.amazonaws.com/Minecraft.Download/versions/1.3.2/minecraft_server.1.3.2.jar",
+        null
+    ),
+
+    /**
+     * Minecraft 1.4.7 (2012-12-27) TODO
+     */
+    R1_4_7(
+        "96B7512AEAD2FB20DDF780D7DD74208D77F209E16058EA8944150179E65B4DD3",
+        "D0E6815670D4469F47E59481CB53425A00E9D3623AF74E7036838C5EE06A7A64",
+        "https://s3.amazonaws.com/Minecraft.Download/versions/1.4.7/minecraft_server.1.4.7.jar",
+        null
+    ),
+
+    /**
+     * Minecraft 1.5.2 (2013-04-25) TODO
+     */
+    R1_5_2(
+        "4F0C7B79CA2B10716703436550F75FA14E784B999707FFAD0EA4E9C38CC256A0",
+        "1C6F2175552D11D1B6BF8A637A51F5B868D441F9F42334BA6A7140F8961495CE",
+        "https://s3.amazonaws.com/Minecraft.Download/versions/1.5.2/minecraft_server.1.5.2.jar",
+        null
+    ),
+
+    /**
+     * Minecraft 1.6.4 (2013-09-19) TODO
+     */
+    R1_6_4(
+        "81841A2FEDFE0CE19983156A06FA5294335284BEEB95C8CA872D3C1A5FCF5774",
+        "7AEEA8EB61ABF47B0E47C37781AD9DC79E7E07146077F19DE28DF09104260A6E",
+        "https://s3.amazonaws.com/Minecraft.Download/versions/1.6.4/minecraft_server.1.6.4.jar",
+        null
+    ),
+
+    /**
+     * Minecraft 1.7.10 (2014-06-26)
+     */
+    R1_7_10(
         "C70870F00C4024D829E154F7E5F4E885B02DD87991726A3308D81F513972F3FC",
         "30B8E85D2C32670C82BF60892B9D848A131A0746B1F643B8DC4200FFE77C8918",
         "http://s3.amazonaws.com/Minecraft.Download/versions/1.7.10/minecraft_server.1.7.10.jar",
-        fr.ribesg.bukkit.pure.minecraft.v1_7_10.ProxyChunkGenerator.class
+        fr.ribesg.bukkit.pure.minecraft.r1_7_10.ProxyChunkGenerator.class
+    ),
+
+    /**
+     * Minecraft 1.8.4 (2015-04-17)
+     */
+    R1_8_4(
+        "394A9D0D5BCD03272A58F036B8736A47D26D63B45A4E7C820629114876E72107",
+        "2CAFAD96F4E4FEF8AA4877491BD17507B0AFAFD16C425BF15C83007D74E4003E",
+        "https://s3.amazonaws.com/Minecraft.Download/versions/1.8.4/minecraft_server.1.8.4.jar",
+        fr.ribesg.bukkit.pure.minecraft.r1_8_4.ProxyChunkGenerator.class
     ),
 
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */;
@@ -125,6 +175,8 @@ public enum MCVersion {
             }
         } catch (final ReflectiveOperationException e) {
             throw new RuntimeException("Failed to call associated proxy ChunkGenerator class constructor");
+        } catch (final NullPointerException e) {
+            throw new IllegalStateException("Generator for Minecraft version " + this + " not implemented yet.", e);
         }
     }
 }

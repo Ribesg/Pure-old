@@ -41,11 +41,12 @@ public final class MCJarHandler {
      * The method will then initialize a {@link ClassLoader} for this jar file
      * and load all the classes in the jar file.
      *
-     * @param version the required version
+     * @param version   the required version
+     * @param checkHash if we check for file hashes or not
      *
      * @throws IOException if anything goes wrong
      */
-    public static void require(final MCVersion version) throws IOException {
+    public static void require(final MCVersion version, final boolean checkHash) throws IOException {
         LOGGER.entering(MCJarHandler.class.getName(), "require");
 
         if (!MCJarHandler.LOADED.get(version)) {
@@ -68,9 +69,9 @@ public final class MCJarHandler {
             if (!Files.exists(jarPath)) {
                 // Doesn't exist, just download it
                 LOGGER.info("Downloading file " + version.getUrl() + " ...");
-                FileUtils.download(jarContainerPath, version.getUrl(), inputJarName, version.getVanillaHash());
+                FileUtils.download(jarContainerPath, version.getUrl(), inputJarName, checkHash ? version.getVanillaHash() : null);
                 LOGGER.info("Done downloading file!");
-            } else {
+            } else if (checkHash) {
                 // Already exists, check hash and redownload it if needed
                 LOGGER.info("Hashing existing jar to make sure it's correct...");
                 final String hash = HashUtils.hashSha256(jarPath);
@@ -87,9 +88,9 @@ public final class MCJarHandler {
             if (!Files.exists(remappedJarPath)) {
                 // Doesn't exist, just relocate it
                 LOGGER.info("Relocating jar file classes (this takes time!)...");
-                FileUtils.relocateJarContent(jarPath, remappedJarPath, version);
+                FileUtils.relocateJarContent(jarPath, remappedJarPath, version, checkHash);
                 LOGGER.info("Done reloacting jar file classes!");
-            } else {
+            } else if (checkHash) {
                 // Already exists, check hash and remap if needed
                 LOGGER.info("Hashing existing remapped jar to make sure it's correct...");
                 final String hash = HashUtils.hashSha256(remappedJarPath);
@@ -98,7 +99,7 @@ public final class MCJarHandler {
                 } else {
                     LOGGER.info("Invalid hash, remapping file...");
                     Files.delete(remappedJarPath);
-                    FileUtils.relocateJarContent(jarPath, remappedJarPath, version);
+                    FileUtils.relocateJarContent(jarPath, remappedJarPath, version, true);
                 }
             }
 

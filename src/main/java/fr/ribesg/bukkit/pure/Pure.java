@@ -21,29 +21,16 @@ import java.util.logging.Logger;
  */
 public final class Pure extends JavaPlugin {
 
-    private static final Level LOG_LEVEL = Level.FINE;
-
     /**
-     * Download and remap all known MC version.
+     * Download, remap and hash all known MC version.
      */
-    public static void main(final String[] args) throws IOException {/*
-        Pure.getPluginLogger().setLevel(Pure.LOG_LEVEL);
-        final ConsoleHandler handler = new ConsoleHandler();
-        handler.setLevel(Pure.LOG_LEVEL);
-        handler.setFormatter(new Formatter() {
-            @Override
-            public String format(final LogRecord record) {
-                return this.formatMessage(record) + '\n';
-            }
-        });
-        Pure.getPluginLogger().addHandler(handler);
-
+    public static void main(final String[] args) throws IOException {
         for (final MCVersion v : MCVersion.values()) {
-            MCJarHandler.require(v);
-        }*/
+            MCJarHandler.require(v, false);
+        }
         try (final DirectoryStream<Path> s = Files.newDirectoryStream(Paths.get("jars"))) {
             for (final Path p : s) {
-                System.out.println(p.getFileName() + "\n\t" + HashUtils.hashSha256(p));
+                Pure.getPluginLogger().info(p.getFileName() + "\n\t" + HashUtils.hashSha256(p));
             }
         }
     }
@@ -120,13 +107,17 @@ public final class Pure extends JavaPlugin {
         }
 
         try {
-            MCJarHandler.require(version);
+            MCJarHandler.require(version, true);
         } catch (final IOException e) {
-            Pure.getPluginLogger().severe("Failed to install MC Version " + version);
-            Pure.getPluginLogger().throwing(Pure.class.getCanonicalName(), "getDefaultWorldGenerator", e);
+            Pure.getPluginLogger().log(Level.SEVERE, "Failed to install MC Version " + version, e);
             return null;
         }
 
-        return version.getChunkGenerator(environment);
+        try {
+            return version.getChunkGenerator(environment);
+        } catch (final IllegalStateException e) {
+            Pure.getPluginLogger().log(Level.SEVERE, "Failed to get Chunk Generator for version " + version, e);
+            return null;
+        }
     }
 }
