@@ -68,7 +68,7 @@ public enum MCVersion {
      */
     R1_7_10(
         "C70870F00C4024D829E154F7E5F4E885B02DD87991726A3308D81F513972F3FC",
-        "30B8E85D2C32670C82BF60892B9D848A131A0746B1F643B8DC4200FFE77C8918",
+        "F9A5DB4BD66A1F3D6BAAD0D1E098F7D6E46FAF6FFB08A256389447CC8E89CEA3",
         "http://s3.amazonaws.com/Minecraft.Download/versions/1.7.10/minecraft_server.1.7.10.jar",
         fr.ribesg.bukkit.pure.minecraft.r1_7_10.ProxyChunkGenerator.class
     ),
@@ -78,7 +78,7 @@ public enum MCVersion {
      */
     R1_8_4(
         "394A9D0D5BCD03272A58F036B8736A47D26D63B45A4E7C820629114876E72107",
-        "2CAFAD96F4E4FEF8AA4877491BD17507B0AFAFD16C425BF15C83007D74E4003E",
+        "9BCFE885BA66BF1044444B862167C6D6426EDA97D37E147B14077BFB8357DC1B",
         "https://s3.amazonaws.com/Minecraft.Download/versions/1.8.4/minecraft_server.1.8.4.jar",
         fr.ribesg.bukkit.pure.minecraft.r1_8_4.ProxyChunkGenerator.class
     ),
