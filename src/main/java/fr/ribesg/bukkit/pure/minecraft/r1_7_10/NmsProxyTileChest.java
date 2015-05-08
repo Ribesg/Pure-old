@@ -1,12 +1,15 @@
 package fr.ribesg.bukkit.pure.minecraft.r1_7_10;
 
-import net.minecraft.server.r1_7_10.adb;
-import net.minecraft.server.r1_7_10.add;
-import net.minecraft.server.r1_7_10.aow;
-import net.minecraft.server.r1_7_10.dh;
+import fr.ribesg.bukkit.pure.Pure;
+import net.minecraft.server.r1_7_10.*;
+import org.bukkit.Material;
 import org.bukkit.block.Chest;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.EnchantmentStorageMeta;
+
+import java.util.logging.Level;
 
 /**
  * @author Ribesg
@@ -15,7 +18,18 @@ public class NmsProxyTileChest extends aow /* TileEntityChest */ {
 
     private final Inventory inv;
 
+    /*
+     * Note that (aow) extends (aor).
+     * (aow)   is the obfuscated class name of TileEntityChest
+     * (aor)   is the obfuscated class name of TileEntity
+     * (aor.c) is the obfuscated field name of TileEntity.xCoord
+     * (aor.d) is the obfuscated field name of TileEntity.yCoord
+     * (aor.e) is the obfuscated field name of TileEntity.zCoord
+     */
     public NmsProxyTileChest(final Chest chest) {
+        this.c = chest.getX();
+        this.d = chest.getY();
+        this.e = chest.getZ();
         this.inv = chest.getBlockInventory();
     }
 
@@ -25,16 +39,16 @@ public class NmsProxyTileChest extends aow /* TileEntityChest */ {
      * (rb)            is the obfuscated class  name of IInventory
      * (add)           is the obfuscated class  name of ItemStack
      * (rb.a(int,add)) is the obfuscated method name of IInventory.setInventorySlotContents(int, ItemStack)
-     * (adb)           is the obfuscated class  name of Item
-     * (adb.b(adb))    is the obfuscated method name of Item.getIdFromItem(Item)
-     * (add.b())       is the obfuscated method name of ItemStack.getItem()
-     * (add.b)         is the obfuscated field  name of ItemStack.stackSize
-     * (add.k())       is the obfuscated method name of ItemStack.getItemDamage()
-     * (dh)            is the obfuscated class  name of NBTTagCompound
-     * (add.d)         is the obfuscated field  name of ItemStack.stackTagCompound
      */
     @Override
-    public void a(final int i, final add addArg) {
+    public void a(final int index, final add addArg) {
+        /*
+         * (adb)        is the obfuscated class  name of Item
+         * (adb.b(adb)) is the obfuscated method name of Item.getIdFromItem(Item)
+         * (add.b())    is the obfuscated method name of ItemStack.getItem()
+         * (add.b)      is the obfuscated field  name of ItemStack.stackSize
+         * (add.k())    is the obfuscated method name of ItemStack.getItemDamage()
+         */
         @SuppressWarnings("deprecation")
         final ItemStack item = new ItemStack(
             adb.b(addArg.b()),
@@ -42,9 +56,56 @@ public class NmsProxyTileChest extends aow /* TileEntityChest */ {
             (short) addArg.k()
         );
 
-        final dh itemNbt = addArg.d;
-        // TODO Enchantments & other generated NBT
+        /*
+         * (dh)           is the obfuscated class  name of NBTTagCompound
+         * (add.d)        is the obfuscated field  name of ItemStack.stackTagCompound
+         * (dq)           is the obfuscated class  name of NBTTagList
+         * (dh.a(String)) is the obfuscated method name of NBTTagCompound.getTag(String)
+         * (dq.c())       is the obfuscated method name of NBTTagList.tagCount()
+         * (dq.b(int))    is the obfuscated method name of NBTTagList.getCompoundTagAt(int)
+         */
+        // Enchanted Books can be generated, let's handle that.
+        if (item.getType() == Material.ENCHANTED_BOOK) {
+            Pure.getPluginLogger().info("Enchanted Book! " + this.c + " " + this.d + " " + this.e);
+            final dh itemNbt = addArg.d;
+            if (itemNbt != null) {
+                final dq storedEnchNbt = (dq) itemNbt.a("StoredEnchantments");
+                if (storedEnchNbt != null && storedEnchNbt.c() > 0) {
+                    final EnchantmentStorageMeta meta = (EnchantmentStorageMeta) item.getItemMeta();
+                    for (int i = 0; i < storedEnchNbt.c(); i++) {
+                        this.addMcEnchant(meta, storedEnchNbt.b(i));
+                    }
+                    item.setItemMeta(meta);
+                }
+            }
+        }
 
-        this.inv.setItem(i, item);
+        this.inv.setItem(index, item);
+    }
+
+    /*d
+     * (dh.a(String)) is the obfuscated method name of NBTTagCompound.getTag(String)
+     * (dw)           is the obfuscated class  name of NBTTagShort
+     * (dw.e())       is the obfuscated method name of NBTTagShort.shortValue()
+     */
+    private void addMcEnchant(final EnchantmentStorageMeta meta, final dh enchNbt) {
+        try {
+            Pure.getPluginLogger().info(enchNbt.toString());
+            // Here we are not using (dh.e(String)) because it does not fail correctly:
+            // it returns 0 instead of throwing an exception.
+            // Instead, we use (dw.e()). This way either the cast will fail or a NPE will be thrown.
+            final short enchId = ((dw) enchNbt.a("net/minecraft/server/r1_7_10/id")).e();
+            final short enchLvl = ((dw) enchNbt.a("lvl")).e();
+            @SuppressWarnings("deprecation")
+            final Enchantment ench = Enchantment.getById(enchId);
+            if (ench == null) {
+                Pure.getPluginLogger().warning("Unknown Enchantment ID (" + enchId + "), ignored.");
+            } else {
+                Pure.getPluginLogger().info("Adding enchantment " + ench + " with level " + enchLvl);
+                meta.addStoredEnchant(ench, enchLvl, false);
+            }
+        } catch (final ClassCastException | NullPointerException e) {
+            Pure.getPluginLogger().log(Level.SEVERE, "Failed to add Enchantment to Enchanted Book, ignored.\nThe NBT was: " + enchNbt, e);
+        }
     }
 }
