@@ -74,14 +74,24 @@ public enum MCVersion {
     ),
 
     /**
-     * Minecraft 1.8.4 (2015-04-17)
+     * Minecraft 1.8 (2014-09-02)
      */
+    R1_8(
+        "C70870F00C4024D829E154F7E5F4E885B02DD87991726A3308D81F513972F3FC",
+        "F9A5DB4BD66A1F3D6BAAD0D1E098F7D6E46FAF6FFB08A256389447CC8E89CEA3",
+        "http://s3.amazonaws.com/Minecraft.Download/versions/1.8/minecraft_server.1.8.jar",
+        fr.ribesg.bukkit.pure.minecraft.r1_8.ProxyChunkGenerator.class
+    ),
+
+    /*/**
+     * Minecraft 1.8.4 (2015-04-17)
+     *//*
     R1_8_4(
         "394A9D0D5BCD03272A58F036B8736A47D26D63B45A4E7C820629114876E72107",
         "9BCFE885BA66BF1044444B862167C6D6426EDA97D37E147B14077BFB8357DC1B",
         "https://s3.amazonaws.com/Minecraft.Download/versions/1.8.4/minecraft_server.1.8.4.jar",
         fr.ribesg.bukkit.pure.minecraft.r1_8_4.ProxyChunkGenerator.class
-    ),
+    ),*/
 
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */;
 

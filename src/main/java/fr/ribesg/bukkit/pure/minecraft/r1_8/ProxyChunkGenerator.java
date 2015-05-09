@@ -1,4 +1,4 @@
-package fr.ribesg.bukkit.pure.minecraft.r1_8_4;
+package fr.ribesg.bukkit.pure.minecraft.r1_8;
 
 import org.bukkit.generator.ChunkGenerator;
 
