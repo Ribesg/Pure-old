@@ -12,7 +12,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.EnumMap;
 import java.util.Map;
-import java.util.logging.Logger;
 
 /**
  * Loads and relocate classes of the Minecraft Server.
@@ -20,8 +19,6 @@ import java.util.logging.Logger;
  * @author Ribesg
  */
 public final class MCJarHandler {
-
-    private static final Logger LOGGER = Pure.getPluginLogger();
 
     private static final Map<MCVersion, Boolean> LOADED = new EnumMap<>(MCVersion.class);
 
@@ -47,10 +44,10 @@ public final class MCJarHandler {
      * @throws IOException if anything goes wrong
      */
     public static void require(final MCVersion version, final boolean checkHash) throws IOException {
-        LOGGER.entering(MCJarHandler.class.getName(), "require");
+        Pure.logger().entering(MCJarHandler.class.getName(), "require");
 
         if (!MCJarHandler.LOADED.get(version)) {
-            LOGGER.info("Minecraft Version " + version.name() + " required for World Generation");
+            Pure.logger().info("Minecraft Version " + version.name() + " required for World Generation");
             // Find (and eventually create) our plugin's folder subfolder containing jar files (plugin/Pure/jars)
             final Path jarContainerPath = Paths.get(Pure.getFolder().getAbsolutePath(), "jars");
             if (!Files.isDirectory(jarContainerPath)) {
@@ -68,17 +65,17 @@ public final class MCJarHandler {
             // Download the Vanilla jar file
             if (!Files.exists(jarPath)) {
                 // Doesn't exist, just download it
-                LOGGER.info("Downloading file " + version.getUrl() + " ...");
+                Pure.logger().info("Downloading file " + version.getUrl() + " ...");
                 FileUtils.download(jarContainerPath, version.getUrl(), inputJarName, checkHash ? version.getVanillaHash() : null);
-                LOGGER.info("Done downloading file!");
+                Pure.logger().info("Done downloading file!");
             } else if (checkHash) {
                 // Already exists, check hash and redownload it if needed
-                LOGGER.info("Hashing existing jar to make sure it's correct...");
+                Pure.logger().info("Hashing existing jar to make sure it's correct...");
                 final String hash = HashUtils.hashSha256(jarPath);
                 if (version.getVanillaHash().equals(hash)) {
-                    LOGGER.info("Vanilla jar hash correct!");
+                    Pure.logger().info("Vanilla jar hash correct!");
                 } else {
-                    LOGGER.info("Invalid hash, redownloading file " + version.getUrl() + " ...");
+                    Pure.logger().info("Invalid hash, redownloading file " + version.getUrl() + " ...");
                     Files.delete(jarPath);
                     FileUtils.download(jarContainerPath, version.getUrl(), inputJarName, version.getVanillaHash());
                 }
@@ -87,17 +84,17 @@ public final class MCJarHandler {
             // Relocate the jar classes packages and put that into our remapped jar file
             if (!Files.exists(remappedJarPath)) {
                 // Doesn't exist, just relocate it
-                LOGGER.info("Relocating jar file classes (this takes time!)...");
+                Pure.logger().info("Relocating jar file classes (this takes time!)...");
                 FileUtils.relocateJarContent(jarPath, remappedJarPath, version, checkHash);
-                LOGGER.info("Done reloacting jar file classes!");
+                Pure.logger().info("Done reloacting jar file classes!");
             } else if (checkHash) {
                 // Already exists, check hash and remap if needed
-                LOGGER.info("Hashing existing remapped jar to make sure it's correct...");
+                Pure.logger().info("Hashing existing remapped jar to make sure it's correct...");
                 final String hash = HashUtils.hashSha256(remappedJarPath);
                 if (version.getRemappedHash().equals(hash)) {
-                    LOGGER.info("Remapped jar hash correct!");
+                    Pure.logger().info("Remapped jar hash correct!");
                 } else {
-                    LOGGER.info("Invalid hash, remapping file...");
+                    Pure.logger().info("Invalid hash, remapping file...");
                     Files.delete(remappedJarPath);
                     FileUtils.relocateJarContent(jarPath, remappedJarPath, version, true);
                 }
@@ -108,13 +105,13 @@ public final class MCJarHandler {
                 final Method addURL = URLClassLoader.class.getDeclaredMethod("addURL", URL.class);
                 addURL.setAccessible(true);
                 addURL.invoke(ClassLoader.getSystemClassLoader(), remappedJarPath.toFile().toURI().toURL());
-                LOGGER.info("Minecraft Version " + version.name() + " ready!");
+                Pure.logger().info("Minecraft Version " + version.name() + " ready!");
             } catch (final ReflectiveOperationException e) {
-                LOGGER.severe("Failed to load classes of " + remappedJarPath);
-                LOGGER.throwing(MCJarHandler.class.getCanonicalName(), "require", e);
+                Pure.logger().severe("Failed to load classes of " + remappedJarPath);
+                Pure.logger().throwing(MCJarHandler.class.getCanonicalName(), "require", e);
             }
         }
 
-        LOGGER.exiting(MCJarHandler.class.getName(), "require");
+        Pure.logger().exiting(MCJarHandler.class.getName(), "require");
     }
 }

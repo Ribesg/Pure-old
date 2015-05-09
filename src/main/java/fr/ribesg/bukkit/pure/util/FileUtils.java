@@ -12,7 +12,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Enumeration;
-import java.util.logging.Logger;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
@@ -22,8 +21,6 @@ import java.util.zip.ZipFile;
  * @author Ribesg
  */
 public final class FileUtils {
-
-    private static final Logger LOGGER = Pure.getPluginLogger();
 
     private static final int MAX_DOWNLOAD_ATTEMPS = 5;
 
@@ -38,7 +35,7 @@ public final class FileUtils {
      * @return the path to the downloaded file
      */
     public static Path download(final Path destinationFolder, final URL sourceUrl, final String wantedFileName, final String wantedHash) throws IOException {
-        LOGGER.entering(FileUtils.class.getName(), "download");
+        Pure.logger().entering(FileUtils.class.getName(), "download");
 
         if ((!Files.exists(destinationFolder) || !Files.isDirectory(destinationFolder)) && !destinationFolder.toFile().mkdirs()) {
             throw new IOException("Folder " + destinationFolder.toString() + " doesn't exist and cannot be created");
@@ -52,34 +49,34 @@ public final class FileUtils {
                 final ReadableByteChannel source = Channels.newChannel(is);
                 final FileOutputStream out = new FileOutputStream(finalFile)
             ) {
-                LOGGER.fine("Downloading " + sourceUrl + " ...");
+                Pure.logger().fine("Downloading " + sourceUrl + " ...");
                 out.getChannel().transferFrom(source, 0, Long.MAX_VALUE);
                 if (wantedHash != null) {
-                    LOGGER.fine("Done! Checking hash...");
+                    Pure.logger().fine("Done! Checking hash...");
                     final String hash = HashUtils.hashSha256(finalFile.toPath());
                     if (hash.equals(wantedHash)) {
-                        LOGGER.fine("The downloaded file is correct!");
+                        Pure.logger().fine("The downloaded file is correct!");
                         break;
                     } else {
-                        LOGGER.warning("The downloaded file is incorrect!");
+                        Pure.logger().warning("The downloaded file is incorrect!");
                         throw new IOException("Download file hash doesn't match awaited hash\nAwaited: " + wantedHash + "\nReceived: " + hash);
                     }
                 } else {
-                    LOGGER.fine("Done!");
+                    Pure.logger().fine("Done!");
                     break;
                 }
             } catch (final IOException e) {
-                LOGGER.warning("Attempt n°" + attempt + " failed!");
+                Pure.logger().warning("Attempt n°" + attempt + " failed!");
                 if (attempt == FileUtils.MAX_DOWNLOAD_ATTEMPS) {
                     throw new IOException("Failed to download file", e);
                 } else {
-                    LOGGER.throwing(FileUtils.class.getName(), "download", e);
+                    Pure.logger().throwing(FileUtils.class.getName(), "download", e);
                 }
             }
             attempt++;
         }
 
-        LOGGER.exiting(FileUtils.class.getName(), "download");
+        Pure.logger().exiting(FileUtils.class.getName(), "download");
 
         return finalFile.toPath();
     }
@@ -95,7 +92,7 @@ public final class FileUtils {
      * @throws IOException if anything goes wrong
      */
     public static void relocateJarContent(final Path inputJar, final Path outputJar, final MCVersion version, final boolean checkHash) throws IOException {
-        LOGGER.entering(FileUtils.class.getName(), "relocateJarContent");
+        Pure.logger().entering(FileUtils.class.getName(), "relocateJarContent");
 
         final String prefix = version.name().toLowerCase();
         final String rulesFilePath = inputJar.toAbsolutePath().toString() + ".tmp";
@@ -132,31 +129,31 @@ public final class FileUtils {
 
         // Execute JarJar
         try {
-            LOGGER.fine("Executing JarJar...");
+            Pure.logger().fine("Executing JarJar...");
             Main.main(new String[] {
                 "process",
                 rulesFilePath,
                 inputJar.toString(),
                 outputJar.toString()
             });
-            LOGGER.fine("Done!");
+            Pure.logger().fine("Done!");
 
             if (checkHash) {
                 final String wantedHash = version.getRemappedHash();
                 final String hash = HashUtils.hashSha256(outputJar);
                 if (hash.equals(wantedHash)) {
-                    LOGGER.fine("The remapped file is correct!");
+                    Pure.logger().fine("The remapped file is correct!");
                 } else {
                     throw new IOException("Remapped file hash doesn't match awaited hash\nAwaited: " + wantedHash + "\nReceived: " + hash);
                 }
             }
 
-            LOGGER.exiting(FileUtils.class.getName(), "relocateJarContent");
+            Pure.logger().exiting(FileUtils.class.getName(), "relocateJarContent");
         } catch (final Exception e) {
             throw new IOException("Failed to execute JarJar", e);
         } finally {
             if (!rulesFile.delete()) {
-                LOGGER.warning("Failed to remove rules file after execution");
+                Pure.logger().warning("Failed to remove rules file after execution");
             }
         }
     }

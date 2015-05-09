@@ -30,7 +30,7 @@ public final class Pure extends JavaPlugin {
         }
         try (final DirectoryStream<Path> s = Files.newDirectoryStream(Paths.get("jars"))) {
             for (final Path p : s) {
-                Pure.getPluginLogger().info(p.getFileName() + "\n\t" + HashUtils.hashSha256(p));
+                Pure.logger().info(p.getFileName() + "\n\t" + HashUtils.hashSha256(p));
             }
         }
     }
@@ -40,7 +40,7 @@ public final class Pure extends JavaPlugin {
      *
      * @return the Logger of the Pure Bukkit plugin
      */
-    public static Logger getPluginLogger() {
+    public static Logger logger() {
         if (Pure.instance == null) {
             return Logger.getLogger("Pure");
         }
@@ -77,13 +77,13 @@ public final class Pure extends JavaPlugin {
     @Override
     public ChunkGenerator getDefaultWorldGenerator(final String worldName, final String id) {
         if (id == null || id.isEmpty()) {
-            Pure.getPluginLogger().severe("Parameters are required for the Pure world generator.");
+            Pure.logger().severe("Parameters are required for the Pure world generator.");
             return null;
         }
 
         final String[] split = id.split(",");
         if (split.length > 2) {
-            Pure.getPluginLogger().severe("Invalid id: " + id);
+            Pure.logger().severe("Invalid id: " + id);
             return null;
         }
 
@@ -92,14 +92,14 @@ public final class Pure extends JavaPlugin {
         try {
             version = MCVersion.valueOf(split[0].toUpperCase());
         } catch (final IllegalArgumentException e) {
-            Pure.getPluginLogger().severe("Invalid MC version String: " + split[0].toUpperCase());
+            Pure.logger().severe("Invalid MC version String: " + split[0].toUpperCase());
             return null;
         }
         if (split.length > 1) {
             try {
                 environment = Environment.valueOf(split[1].toUpperCase());
             } catch (final IllegalArgumentException e) {
-                Pure.getPluginLogger().severe("Invalid Bukkit Environment String: " + split[1].toUpperCase());
+                Pure.logger().severe("Invalid Bukkit Environment String: " + split[1].toUpperCase());
                 return null;
             }
         } else {
@@ -109,14 +109,14 @@ public final class Pure extends JavaPlugin {
         try {
             MCJarHandler.require(version, true);
         } catch (final IOException e) {
-            Pure.getPluginLogger().log(Level.SEVERE, "Failed to install MC Version " + version, e);
+            Pure.logger().log(Level.SEVERE, "Failed to install MC Version " + version, e);
             return null;
         }
 
         try {
             return version.getChunkGenerator(environment);
         } catch (final IllegalStateException e) {
-            Pure.getPluginLogger().log(Level.SEVERE, "Failed to get Chunk Generator for version " + version, e);
+            Pure.logger().log(Level.SEVERE, "Failed to get Chunk Generator for version " + version, e);
             return null;
         }
     }

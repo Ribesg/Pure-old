@@ -165,7 +165,7 @@ public enum MCVersion {
             } catch (final NoSuchMethodException e1) {
                 try {
                     if (environment != null) {
-                        Pure.getPluginLogger().warning("Ignored environment parameter for MC version " + this);
+                        Pure.logger().warning("Ignored environment parameter for MC version " + this);
                     }
                     return this.chunkGeneratorClass.getDeclaredConstructor().newInstance();
                 } catch (final NoSuchMethodException e2) {

@@ -78,7 +78,7 @@ public class NmsProxyTileChest extends aow /* TileEntityChest */ {
      */
     private void addMcEnchant(final EnchantmentStorageMeta meta, final dh enchNbt) {
         try {
-            Pure.getPluginLogger().info(enchNbt.toString());
+            Pure.logger().info(enchNbt.toString());
             // Here we are not using (dh.e(String)) because it does not fail correctly:
             // it returns 0 instead of throwing an exception.
             // Instead, we use (dw.e()). This way either the cast will fail or a NPE will be thrown.
@@ -87,12 +87,12 @@ public class NmsProxyTileChest extends aow /* TileEntityChest */ {
             @SuppressWarnings("deprecation")
             final Enchantment ench = Enchantment.getById(enchId);
             if (ench == null) {
-                Pure.getPluginLogger().warning("Unknown Enchantment ID (" + enchId + "), ignored.");
+                Pure.logger().warning("Unknown Enchantment ID (" + enchId + "), ignored.");
             } else {
                 meta.addStoredEnchant(ench, enchLvl, false);
             }
         } catch (final ClassCastException | NullPointerException e) {
-            Pure.getPluginLogger().log(Level.SEVERE, "Failed to add Enchantment to Enchanted Book, ignored.\nThe NBT was: " + enchNbt, e);
+            Pure.logger().log(Level.SEVERE, "Failed to add Enchantment to Enchanted Book, ignored.\nThe NBT was: " + enchNbt, e);
         }
     }
 }

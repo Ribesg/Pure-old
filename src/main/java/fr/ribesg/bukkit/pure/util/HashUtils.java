@@ -7,7 +7,6 @@ import java.io.RandomAccessFile;
 import java.nio.file.Path;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.logging.Logger;
 
 /**
  * Used to hash things.
@@ -16,8 +15,6 @@ import java.util.logging.Logger;
  * @author coelho
  */
 public final class HashUtils {
-
-    private static final Logger LOGGER = Pure.getPluginLogger();
 
     /**
      * Buffer for file reading. Set to 1 Mo.
@@ -35,7 +32,7 @@ public final class HashUtils {
      * @param filePath a file
      */
     public static String hashSha256(final Path filePath) throws IOException {
-        LOGGER.entering(FileUtils.class.getName(), "hashSha256");
+        Pure.logger().entering(FileUtils.class.getName(), "hashSha256");
 
         try (
             final RandomAccessFile file = new RandomAccessFile(filePath.toFile(), "r")
@@ -52,7 +49,7 @@ public final class HashUtils {
                 lastIndex += readSize;
             }
 
-            LOGGER.exiting(FileUtils.class.getName(), "hashSha256");
+            Pure.logger().exiting(FileUtils.class.getName(), "hashSha256");
 
             return HashUtils.bytesToHex(digest.digest());
         } catch (final NoSuchAlgorithmException e) {

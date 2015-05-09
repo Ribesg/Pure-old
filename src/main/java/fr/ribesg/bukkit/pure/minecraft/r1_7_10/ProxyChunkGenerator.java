@@ -14,15 +14,12 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Random;
-import java.util.logging.Logger;
 
 /**
  * @author Ribesg
  * @author coelho
  */
 public class ProxyChunkGenerator extends ChunkGenerator {
-
-    private static final Logger LOGGER = Pure.getPluginLogger();
 
     static {
         // Required static constructor to initialize NMS classes
@@ -171,8 +168,8 @@ public class ProxyChunkGenerator extends ChunkGenerator {
             this.blockPopulator.nmsWorld = nmsWorld;
             this.blockPopulator.nmsChunkProvider = nmsChunkProvider;
         } catch (final ReflectiveOperationException e) {
-            LOGGER.severe("Error while initializing ProxyChunkGenerator");
-            LOGGER.throwing(ProxyChunkGenerator.class.getName(), "initializeNms", e);
+            Pure.logger().severe("Error while initializing ProxyChunkGenerator");
+            Pure.logger().throwing(ProxyChunkGenerator.class.getName(), "initializeNms", e);
             return false;
         }
         this.nmsInitialized = true;

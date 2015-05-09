@@ -65,7 +65,7 @@ public class NmsProxyWorldServer extends mt /* WorldServer */ {
         } else if (blockState instanceof Chest) {
             return new NmsProxyTileChest((Chest) blockState);
         } else {
-            Pure.getPluginLogger().warning("NMSProxyWorldServer missing: " + blockState.getClass().getName());
+            Pure.logger().warning("NMSProxyWorldServer missing: " + blockState.getClass().getName());
         }
         return null;
     }
