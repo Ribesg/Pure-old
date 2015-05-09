@@ -33,7 +33,7 @@ I first started by implementing a clean way to handle Minecraft Server jar files
 implementation of Minecraft 1.7.10 found in [VanillaGenerator]. I understood it, commented it, enhanced it and
 fixed it. I added generated chests support among other things.
 
-[Glowstone]: www.glowstone.net
-[coelho]: github.com/coelho
-[VanillaGenerator]: github.com/coelho/VanillaGenerator
-[VanillaNMS]: github.com/coelho/VanillaGenerator
+[Glowstone]: //www.glowstone.net
+[coelho]: //github.com/coelho
+[VanillaGenerator]: //github.com/coelho/VanillaGenerator
+[VanillaNMS]: //github.com/coelho/VanillaGenerator
