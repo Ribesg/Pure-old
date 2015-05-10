@@ -71,10 +71,10 @@ public class NmsProxyTileChest extends aow /* TileEntityChest */ {
         this.inv.setItem(index, item);
     }
 
-    /*d
+    /*
      * (dh.a(String)) is the obfuscated method name of NBTTagCompound.getTag(String)
      * (dw)           is the obfuscated class  name of NBTTagShort
-     * (dw.e())       is the obfuscated method name of NBTTagShort.shortValue()
+     * (dw.e())       is the obfuscated method name of NBTTagShort.getShort()
      */
     private void addMcEnchant(final EnchantmentStorageMeta meta, final dh enchNbt) {
         try {

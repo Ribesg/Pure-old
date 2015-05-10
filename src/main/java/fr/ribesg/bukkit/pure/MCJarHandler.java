@@ -7,9 +7,7 @@ import java.io.IOException;
 import java.lang.reflect.Method;
 import java.net.URL;
 import java.net.URLClassLoader;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.nio.file.*;
 import java.util.EnumMap;
 import java.util.Map;
 
@@ -86,7 +84,7 @@ public final class MCJarHandler {
                 // Doesn't exist, just relocate it
                 Pure.logger().info("Relocating jar file classes (this takes time!)...");
                 FileUtils.relocateJarContent(jarPath, remappedJarPath, version, checkHash);
-                Pure.logger().info("Done reloacting jar file classes!");
+                Pure.logger().info("Done relocating jar file classes!");
             } else if (checkHash) {
                 // Already exists, check hash and remap if needed
                 Pure.logger().info("Hashing existing remapped jar to make sure it's correct...");

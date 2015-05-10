@@ -1,32 +1,33 @@
-package fr.ribesg.bukkit.pure.minecraft.r1_7_10;
+package fr.ribesg.bukkit.pure.minecraft.r1_8;
 
-import net.minecraft.server.r1_7_10.*;
+import net.minecraft.server.r1_8.*;
 import org.bukkit.block.CreatureSpawner;
 import org.bukkit.entity.EntityType;
 
 /**
- * @author coelho
  * @author Ribesg
  */
-public class NmsProxyTileMobSpawner extends apj {
+public class NmsProxyTileMobSpawner extends bdg {
 
     private final CreatureSpawner creatureSpawner;
 
-    public NmsProxyTileMobSpawner(final CreatureSpawner creatureSpawner) {
+    public NmsProxyTileMobSpawner(CreatureSpawner creatureSpawner) {
         this.creatureSpawner = creatureSpawner;
     }
 
     @Override
-    public agq a() {
-        return new NmsProxyMobSpawner();
+    public aqi b() {
+        return new NMSProxyMobSpawner();
     }
 
-    public class NmsProxyMobSpawner extends agq {
+    public class NMSProxyMobSpawner extends aqi {
 
-        public ahb a() {
+        @Override
+        public aqu a() {
             return null; // NOP
         }
 
+        @Override
         public void a(final int arg0) {
             // NOP
         }
@@ -40,16 +41,9 @@ public class NmsProxyTileMobSpawner extends apj {
             NmsProxyTileMobSpawner.this.creatureSpawner.setSpawnedType(EntityType.valueOf(mob));
         }
 
-        public int b() {
-            return 0; // NOP
-        }
-
-        public int c() {
-            return 0; // NOP
-        }
-
-        public int d() {
-            return 0; // NOP
+        @Override
+        public dt b() {
+            return null; // NOP
         }
     }
 }

@@ -1,17 +1,12 @@
 package fr.ribesg.bukkit.pure.minecraft.r1_7_10;
 
 import fr.ribesg.bukkit.pure.util.HashUtils;
-import net.minecraft.server.r1_7_10.ahb;
-import net.minecraft.server.r1_7_10.apu;
-import net.minecraft.server.r1_7_10.apx;
-import net.minecraft.server.r1_7_10.apz;
+import net.minecraft.server.r1_7_10.*;
 import org.bukkit.Chunk;
 import org.bukkit.World;
 import org.bukkit.generator.BlockPopulator;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Random;
+import java.util.*;
 
 /**
  * @author Ribesg
@@ -19,28 +14,28 @@ import java.util.Random;
  */
 public class ProxyBlockPopulator extends BlockPopulator {
 
+    private final Map<Long, apx> nmsChunks = new HashMap<>();   // Map<Long, Chunk>
     /*package */ apu                   nmsGenerator;            // IChunkProvider
     /*package */ ahb                   nmsWorld;                // World
     /*package */ NmsDummyChunkProvider nmsChunkProvider;
 
-    private final Map<Long, apx> nmsChunks = new HashMap<>();   // Map<Long, Chunk>
-
     public void addChunk(final apx chunk) {
         /*
-         * (apx) is the obfuscated class name of Chunk, (g) and (h) obviously
+         * (apx) is the obfuscated class name of Chunk, (apx.g) and (apx.h) obviously
          * represents the chunk's xPosition and zPosition.
          */
         this.nmsChunks.put(HashUtils.toLong(chunk.g, chunk.h), chunk);
     }
 
     @SuppressWarnings("deprecation")
+    @Override
     public void populate(final World world, final Random random, final Chunk chunk) {
         /*
          * Comments on the following obfuscated things:
          * - (apx)                  is the obfuscated class  name of Chunk
          * - (apu.c(int, int))      is the obfuscated method name of IChunkProvider.loadChunk(int, int)
          * - (apz)                  is the obfuscated class  name of ExtendedBlockStorage
-         * - (apz.i())              is the obfuscated method name of ExtendedBlockStorage.getBlockStorageArray()
+         * - (apx.i())              is the obfuscated method name of Chunk.getBlockStorageArray()
          * - (apz.b(int, int, int)) is the obfuscated method name of ExtendedBlockStorage.getExtBlockMetadata(int, int, int)
          * - (apu.a(apu, int, int)) is the obfuscated method name of IChunkProvider.populate(IChunkProvider, int, int)
          */

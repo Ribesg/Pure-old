@@ -1,20 +1,20 @@
-package fr.ribesg.bukkit.pure.minecraft.r1_7_10;
+package fr.ribesg.bukkit.pure.minecraft.r1_8;
 
-import net.minecraft.server.r1_7_10.ayl;
-import net.minecraft.server.r1_7_10.azq;
+import net.minecraft.server.r1_8.bqc;
+import net.minecraft.server.r1_8.brn;
 
 /**
  * @author coelho
  * @author Ribesg
  */
-public class NmsDummyMapStorage extends azq /* MapStorage */ {
+public class NmsDummyMapStorage extends brn /* MapStorage */ {
 
     public NmsDummyMapStorage() {
         super(null);
     }
 
     @Override
-    public void a(final String arg0, final ayl arg1) {
+    public void a(final String arg0, final bqc arg1) {
         // NOP
     }
 
@@ -25,7 +25,7 @@ public class NmsDummyMapStorage extends azq /* MapStorage */ {
 
     @SuppressWarnings("rawtypes")
     @Override
-    public ayl a(final Class arg0, final String arg1) {
+    public bqc a(final Class arg0, final String arg1) {
         return null; // NOP
     }
 }

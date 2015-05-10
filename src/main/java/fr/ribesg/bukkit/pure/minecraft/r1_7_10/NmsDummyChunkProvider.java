@@ -31,33 +31,13 @@ public class NmsDummyChunkProvider implements apu /* IChunkProvider */ {
     protected apx chunk;
 
     @Override
-    public void c() {
-        // NOP
-    }
-
-    @Override
-    public boolean e() {
-        return false; // NOP
-    }
-
-    @Override
     public agt a(final ahb arg0, final String arg1, final int arg2, final int arg3, final int arg4) {
         return null; // NOP
     }
 
     @Override
-    public apx d(final int x, final int y) {
-        return this.c(x, y);
-    }
-
-    @Override
     public void a(final apu arg0, final int arg1, final int arg2) {
         // NOP
-    }
-
-    @Override
-    public int g() {
-        return 0; // NOP
     }
 
     @SuppressWarnings("rawtypes")
@@ -67,8 +47,18 @@ public class NmsDummyChunkProvider implements apu /* IChunkProvider */ {
     }
 
     @Override
-    public String f() {
-        return null; // NOP
+    public boolean a(final int x, final int y) {
+        return this.chunk != null && !(this.chunk.g != x || this.chunk.h != y);
+    }
+
+    @Override
+    public boolean a(final boolean arg0, final qk arg1) {
+        return false; // NOP
+    }
+
+    @Override
+    public void c() {
+        // NOP
     }
 
     @Override
@@ -83,8 +73,18 @@ public class NmsDummyChunkProvider implements apu /* IChunkProvider */ {
     }
 
     @Override
-    public boolean a(final int x, final int y) {
-        return this.chunk != null && !(this.chunk.g != x || this.chunk.h != y);
+    public apx d(final int x, final int y) {
+        return this.c(x, y);
+    }
+
+    @Override
+    public boolean d() {
+        return false; // NOP
+    }
+
+    @Override
+    public boolean e() {
+        return false; // NOP
     }
 
     @Override
@@ -93,12 +93,12 @@ public class NmsDummyChunkProvider implements apu /* IChunkProvider */ {
     }
 
     @Override
-    public boolean a(final boolean arg0, final qk arg1) {
-        return false; // NOP
+    public String f() {
+        return null; // NOP
     }
 
     @Override
-    public boolean d() {
-        return false; // NOP
+    public int g() {
+        return 0; // NOP
     }
 }

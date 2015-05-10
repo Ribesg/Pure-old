@@ -10,10 +10,8 @@ import org.bukkit.block.Biome;
 import org.bukkit.generator.BlockPopulator;
 import org.bukkit.generator.ChunkGenerator;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
+import java.util.logging.Level;
 
 /**
  * @author Ribesg
@@ -41,7 +39,7 @@ public class ProxyChunkGenerator extends ChunkGenerator {
 
     @SuppressWarnings("deprecation")
     @Override
-    public short[][] generateExtBlockSections(final World world, final Random random, final int x, final int z, final ChunkGenerator.BiomeGrid biomes) {
+    public short[][] generateExtBlockSections(final World world, final Random random, final int x, final int z, final BiomeGrid biomes) {
         // Make sure that we initialize the NMS part first. Should be called once.
         if (!this.nmsInitialized && !this.initializeNms(world)) {
             return null;
@@ -52,7 +50,7 @@ public class ProxyChunkGenerator extends ChunkGenerator {
          * - (apx)             is the obfuscated class  name of Chunk
          * - (apu.c(int, int)) is the obfuscated method name of IChunkProvider.loadChunk(int, int)
          * - (apz)             is the obfuscated class  name of ExtendedBlockStorage
-         * - (apz.i())         is the obfuscated method name of ExtendedBlockStorage.getBlockStorageArray()
+         * - (apx.i())         is the obfuscated method name of Chunk.getBlockStorageArray()
          */
         final apx nmsChunk = this.nmsGenerator.c(x, z);
         final apz[] nmsChunkSections = nmsChunk.i();
@@ -96,6 +94,14 @@ public class ProxyChunkGenerator extends ChunkGenerator {
         return result;
     }
 
+    @Override
+    public List<BlockPopulator> getDefaultPopulators(final World world) {
+        if (!this.nmsInitialized && !this.initializeNms(world)) {
+            return null;
+        }
+        return Collections.singletonList((BlockPopulator) this.blockPopulator);
+    }
+
     private boolean initializeNms(final World world) {
         try {
             /*
@@ -104,7 +110,7 @@ public class ProxyChunkGenerator extends ChunkGenerator {
              * - Set field rand (s)          of World               to a new Random instance
              * - Set field worldAccesses (u) of World               to a new ArrayList instance
              * Notes:
-             * - NmsProxyServer extends WorldServer (mt) which extends World (ahb)
+             * - NmsProxyWorldServer extends WorldServer (mt) which extends World (ahb)
              */
             final ahb nmsWorld = ReflectionUtils.newInstance(NmsProxyWorldServer.class);
             ReflectionUtils.set(nmsWorld.getClass(), nmsWorld, "world", world);
@@ -127,9 +133,9 @@ public class ProxyChunkGenerator extends ChunkGenerator {
              * - Set field mapFeaturesEnabled (t) of WorldInfo to the canGenerateStructure parameter of our Bukkit world
              * - Set field worldInfo (x)          of World     to the newly created WorldInfo instance
              * Notes:
+             * - (ays)           is the obfuscated class  name of WorldInfo
              * - (ahm)           is the obfuscated class  name of WorldType
              * - (ahm.a(String)) is the obfuscated method name of WorldType.parseWorldType(String)
-             * - (ays)           is the obfuscated class  name of WorldInfo
              */
             final ays nmsWorldData = ReflectionUtils.newInstance(ays.class);
             ReflectionUtils.set(nmsWorldData.getClass(), nmsWorldData, "a", world.getSeed());
@@ -168,19 +174,10 @@ public class ProxyChunkGenerator extends ChunkGenerator {
             this.blockPopulator.nmsWorld = nmsWorld;
             this.blockPopulator.nmsChunkProvider = nmsChunkProvider;
         } catch (final ReflectiveOperationException e) {
-            Pure.logger().severe("Error while initializing ProxyChunkGenerator");
-            Pure.logger().throwing(ProxyChunkGenerator.class.getName(), "initializeNms", e);
+            Pure.logger().log(Level.SEVERE, "Error while initializing ProxyChunkGenerator", e);
             return false;
         }
         this.nmsInitialized = true;
         return true;
-    }
-
-    @Override
-    public List<BlockPopulator> getDefaultPopulators(final World world) {
-        if (!this.nmsInitialized && !this.initializeNms(world)) {
-            return null;
-        }
-        return Collections.singletonList((BlockPopulator) this.blockPopulator);
     }
 }
