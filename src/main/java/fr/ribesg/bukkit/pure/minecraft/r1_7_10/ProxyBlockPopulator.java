@@ -1,7 +1,7 @@
 package fr.ribesg.bukkit.pure.minecraft.r1_7_10;
 
 import fr.ribesg.bukkit.pure.util.HashUtils;
-import net.minecraft.server.r1_7_10.*;
+import r1_7_10.net.minecraft.server.*;
 import org.bukkit.Chunk;
 import org.bukkit.World;
 import org.bukkit.generator.BlockPopulator;

@@ -1,7 +1,6 @@
 package fr.ribesg.bukkit.pure.minecraft.r1_7_10;
 
-import net.minecraft.server.r1_7_10.ayl;
-import net.minecraft.server.r1_7_10.azq;
+import r1_7_10.net.minecraft.server.*;
 
 /**
  * @author coelho

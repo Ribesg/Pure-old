@@ -10,8 +10,7 @@ import java.nio.channels.Channels;
 import java.nio.channels.ReadableByteChannel;
 import java.nio.file.*;
 import java.util.Enumeration;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipFile;
+import java.util.zip.*;
 
 /**
  * Used to download things.
@@ -117,12 +116,22 @@ public final class FileUtils {
             while (enumeration.hasMoreElements()) {
                 entry = enumeration.nextElement();
                 entryName = entry.getName();
-                if (!entryName.contains("META-INF") && !entry.isDirectory() &&
-                    !entryName.contains("/") && entryName.endsWith(".class")) {
-                    writer.write("rule " + entryName.replace(".class", "") + " net.minecraft.server." + prefix + ".@0\n");
+
+                if (!entryName.contains("META-INF")) {
+                    if (entry.isDirectory()) {
+                        writer.write("rule " + entryName.replace('/', '.') + "* " + prefix + ".@0\n");
+                    } else if (!entryName.contains("/")) {
+                        if (entryName.endsWith(".class")) {
+                            final String nameWithoutClass = entryName.replace(".class", "");
+                            if (nameWithoutClass.contains(".")) {
+                                writer.write("rule " + nameWithoutClass + " " + prefix + ".@0\n");
+                            } else {
+                                writer.write("rule " + nameWithoutClass + " " + prefix + ".net.minecraft.server.@0\n");
+                            }
+                        }
+                    }
                 }
             }
-            writer.write("rule net.minecraft.server.* net.minecraft.server." + prefix + ".@1\n");
         }
 
         // Execute JarJar
@@ -136,6 +145,9 @@ public final class FileUtils {
             });
             Pure.logger().fine("Done!");
 
+            // Remove META-INF folder in final jar
+            FileUtils.removePrefixedBy("META-INF", outputJar);
+
             if (checkHash) {
                 final String wantedHash = version.getRemappedHash();
                 final String hash = HashUtils.hashSha256(outputJar);
@@ -145,13 +157,53 @@ public final class FileUtils {
                     throw new IOException("Remapped file hash doesn't match awaited hash\nAwaited: " + wantedHash + "\nReceived: " + hash);
                 }
             }
-
-            Pure.logger().exiting(FileUtils.class.getName(), "relocateJarContent");
         } catch (final Exception e) {
             throw new IOException("Failed to execute JarJar", e);
         } finally {
             if (!rulesFile.delete()) {
                 Pure.logger().warning("Failed to remove rules file after execution");
+            }
+        }
+
+        Pure.logger().exiting(FileUtils.class.getName(), "relocateJarContent");
+    }
+
+    /**
+     * Removes any file in the provided zip file whose path starts with
+     * provided prefix.
+     *
+     * @param prefix the prefix
+     * @param zip    the file
+     *
+     * @throws IOException if anything goes wrong
+     */
+    public static void removePrefixedBy(final String prefix, final Path zip) throws IOException {
+        // Rename original file to tmp file
+        final Path tmp = Paths.get(zip.toAbsolutePath().toString() + ".tmp");
+        Files.move(zip, tmp, StandardCopyOption.REPLACE_EXISTING);
+
+        // Rebuild original file from tmp file while filtering content
+        try (
+            final ZipInputStream in = new ZipInputStream(Files.newInputStream(tmp));
+            final ZipOutputStream out = new ZipOutputStream(Files.newOutputStream(zip))
+        ) {
+            final byte[] buffer = new byte[1024];
+            int read;
+            ZipEntry entry;
+            while ((entry = in.getNextEntry()) != null) {
+                final String entryName = entry.getName();
+                if (!entryName.startsWith(prefix)) {
+                    // Create entry in new file
+                    out.putNextEntry(new ZipEntry(entry));
+                    // Copy content of entry to new file
+                    while ((read = in.read(buffer)) > 0) {
+                        out.write(buffer, 0, read);
+                    }
+                }
+            }
+        } finally {
+            if (!tmp.toFile().delete()) {
+                Pure.logger().warning("Failed to remove tmp file after execution");
             }
         }
     }

@@ -1,7 +1,6 @@
 package fr.ribesg.bukkit.pure.minecraft.r1_8;
 
-import net.minecraft.server.r1_8.bqc;
-import net.minecraft.server.r1_8.brn;
+import r1_8.net.minecraft.server.*;
 
 /**
  * @author coelho

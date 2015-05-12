@@ -1,6 +1,6 @@
 package fr.ribesg.bukkit.pure.minecraft.r1_7_10;
 
-import net.minecraft.server.r1_7_10.*;
+import r1_7_10.net.minecraft.server.*;
 import org.bukkit.block.CreatureSpawner;
 import org.bukkit.entity.EntityType;
 

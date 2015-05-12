@@ -8,6 +8,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.*;
+import java.util.concurrent.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -21,10 +22,23 @@ public final class Pure extends JavaPlugin {
     /**
      * Download, remap and hash all known MC version.
      */
-    public static void main(final String[] args) throws IOException {
+    public static void main(final String[] args) throws Throwable {
+        final ExecutorService executor = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors() - 1);
         for (final MCVersion v : MCVersion.values()) {
-            MCJarHandler.require(v, false);
+            executor.submit(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        MCJarHandler.require(v, false);
+                    } catch (final IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+            Thread.sleep(250);
         }
+        executor.shutdown();
+        executor.awaitTermination(5, TimeUnit.MINUTES);
         try (final DirectoryStream<Path> s = Files.newDirectoryStream(Paths.get("jars"))) {
             for (final Path p : s) {
                 Pure.logger().info(p.getFileName() + "\n\t" + HashUtils.hashSha256(p));

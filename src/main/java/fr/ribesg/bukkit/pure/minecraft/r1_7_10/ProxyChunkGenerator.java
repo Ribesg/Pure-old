@@ -3,7 +3,7 @@ package fr.ribesg.bukkit.pure.minecraft.r1_7_10;
 import fr.ribesg.bukkit.pure.Pure;
 import fr.ribesg.bukkit.pure.util.BiomeUtils;
 import fr.ribesg.bukkit.pure.util.ReflectionUtils;
-import net.minecraft.server.r1_7_10.*;
+import r1_7_10.net.minecraft.server.*;
 import org.bukkit.World;
 import org.bukkit.World.Environment;
 import org.bukkit.block.Biome;

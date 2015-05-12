@@ -1,7 +1,7 @@
 package fr.ribesg.bukkit.pure.minecraft.r1_8;
 
 import fr.ribesg.bukkit.pure.Pure;
-import net.minecraft.server.r1_8.*;
+import r1_8.net.minecraft.server.*;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.*;
